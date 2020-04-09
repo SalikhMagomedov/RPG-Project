@@ -3,8 +3,6 @@ using UnityEngine.AI;
 
 public class Mover : MonoBehaviour
 {
-    [SerializeField] private Transform target;
-
     private NavMeshAgent _agent;
     private Camera _camera;
     private Animator _animator;
@@ -20,7 +18,7 @@ public class Mover : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0)) MoveToCursor();
+        if (Input.GetMouseButton(0)) MoveToCursor();
         UpdateAnimator();
     }
 
