@@ -22,8 +22,14 @@ namespace Combat
 
         public void Cancel()
         {
-            _animator.SetTrigger(StopAttackTrigger);
+            StopAttack();
             _target = null;
+        }
+
+        private void StopAttack()
+        {
+            _animator.ResetTrigger(StopAttackTrigger);
+            _animator.SetTrigger(StopAttackTrigger);
         }
 
         private void Awake()
@@ -53,12 +59,19 @@ namespace Combat
         {
             transform.LookAt(_target.transform);
             if (!(_timeSinceLastAttack > timeBetweenAttacks)) return;
-            _animator.SetTrigger(AttackAnimation);
+            TriggerAttack();
             _timeSinceLastAttack = 0;
+        }
+
+        private void TriggerAttack()
+        {
+            _animator.ResetTrigger(StopAttackTrigger);
+            _animator.SetTrigger(AttackAnimation);
         }
 
         private void Hit()
         {
+            if (_target == null) return;
             _target.TakeDamage(weaponDamage);
         }
 
