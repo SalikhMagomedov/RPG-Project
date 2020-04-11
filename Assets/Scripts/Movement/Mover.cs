@@ -34,6 +34,12 @@ namespace Movement
         public void MoveTo(Vector3 destination)
         {
             _agent.destination = destination;
+            _agent.isStopped = false;
+        }
+
+        public void Stop()
+        {
+            _agent.isStopped = true;
         }
     }
 }
