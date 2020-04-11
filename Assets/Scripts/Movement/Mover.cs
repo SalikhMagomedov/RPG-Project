@@ -8,9 +8,9 @@ namespace Movement
     {
         private NavMeshAgent _agent;
         private Animator _animator;
+        private ActionScheduler _actionScheduler;
 
         private static readonly int Property = Animator.StringToHash("Forward Speed");
-        private ActionScheduler _actionScheduler;
 
         private void Awake()
         {

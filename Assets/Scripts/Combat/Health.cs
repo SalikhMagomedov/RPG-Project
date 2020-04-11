@@ -6,9 +6,12 @@ namespace Combat
     public class Health : MonoBehaviour
     {
         [SerializeField] private float health = 100f;
+        
         private static readonly int DieTrigger = Animator.StringToHash("Die");
 
         private bool _isDead;
+
+        public bool IsDead => _isDead;
 
         public void TakeDamage(float damage)
         {

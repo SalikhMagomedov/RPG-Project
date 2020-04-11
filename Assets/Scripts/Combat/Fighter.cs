@@ -8,14 +8,16 @@ namespace Combat
     {
         [SerializeField] private float weaponRange = 2f;
         [SerializeField] private float timeBetweenAttacks = 2f;
+        [SerializeField] private float weaponDamage = 10f;
 
-        private Transform _target;
+        private Health _target;
         private Mover _mover;
         private ActionScheduler _actionScheduler;
-        private static readonly int AttackAnimation = Animator.StringToHash("Attack");
         private Animator _animator;
         private float _timeSinceLastAttack;
-        [SerializeField] private float weaponDamage = 10f;
+
+        private static readonly int AttackAnimation = Animator.StringToHash("Attack");
+        private static readonly int StopAttackTrigger = Animator.StringToHash("StopAttack");
 
         private void Awake()
         {
@@ -29,10 +31,11 @@ namespace Combat
             _timeSinceLastAttack += Time.deltaTime;
 
             if (_target == null) return;
+            if (_target.IsDead) return;
 
             if (!IsInRange())
             {
-                _mover.MoveTo(_target.position);
+                _mover.MoveTo(_target.transform.position);
             }
             else
             {
@@ -50,23 +53,23 @@ namespace Combat
 
         private void Hit()
         {
-            var healthComponent = _target.GetComponent<Health>();
-            healthComponent.TakeDamage(weaponDamage);
+            _target.TakeDamage(weaponDamage);
         }
 
         private bool IsInRange()
         {
-            return Vector3.Distance(transform.position, _target.position) < weaponRange;
+            return Vector3.Distance(transform.position, _target.transform.position) < weaponRange;
         }
 
         public void Attack(CombatTarget target)
         {
             _actionScheduler.StartAction(this);
-            _target = target.transform;
+            _target = target.GetComponent<Health>();
         }
 
         public void Cancel()
         {
+            _animator.SetTrigger(StopAttackTrigger);
             _target = null;
         }
     }
