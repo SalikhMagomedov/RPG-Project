@@ -19,16 +19,16 @@ namespace Control
 
         private void Update()
         {
-            InteractWithCombat();
-            InteractWithMovement();
+            if (InteractWithCombat()) return;
+            if (InteractWithMovement()) return;
         }
 
-        private void InteractWithCombat()
+        private bool InteractWithCombat()
         {
             var hits = new RaycastHit[5];
             var size = Physics.RaycastNonAlloc(GetMouseRay(), hits);
 
-            if (size <= 0) return;
+            if (size <= 0) return false;
 
             foreach (var hit in hits)
             {
@@ -37,18 +37,19 @@ namespace Control
                 if (target == null) continue;
 
                 if (Input.GetMouseButtonDown(0)) _fighter.Attack(target);
+                return true;
             }
+
+            return false;
         }
 
-        private void InteractWithMovement()
-        {
-            if (Input.GetMouseButton(0)) MoveToCursor();
-        }
-
-        private void MoveToCursor()
+        private bool InteractWithMovement()
         {
             var hasHit = Physics.Raycast(GetMouseRay(), out var hit);
-            if (hasHit) _mover.MoveTo(hit.point);
+            if (!hasHit) return false;
+            if (Input.GetMouseButtonDown(0)) _mover.MoveTo(hit.point);
+
+            return true;
         }
 
         private Ray GetMouseRay()
