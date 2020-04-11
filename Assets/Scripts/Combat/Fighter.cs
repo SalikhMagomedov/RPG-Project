@@ -46,6 +46,7 @@ namespace Combat
 
         private void AttackBehaviour()
         {
+            transform.LookAt(_target.transform);
             if (!(_timeSinceLastAttack > timeBetweenAttacks)) return;
             _animator.SetTrigger(AttackAnimation);
             _timeSinceLastAttack = 0;
