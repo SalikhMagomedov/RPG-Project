@@ -11,9 +11,12 @@ namespace Combat
         private Transform _target;
         private Mover _mover;
         private ActionScheduler _actionScheduler;
+        private static readonly int AttackAnimation = Animator.StringToHash("Attack");
+        private Animator _animator;
 
         private void Awake()
         {
+            _animator = GetComponent<Animator>();
             _actionScheduler = GetComponent<ActionScheduler>();
             _mover = GetComponent<Mover>();
         }
@@ -23,9 +26,19 @@ namespace Combat
             if (_target == null) return;
 
             if (!IsInRange())
+            {
                 _mover.MoveTo(_target.position);
+            }
             else
+            {
                 _mover.Cancel();
+                AttackBehaviour();
+            }
+        }
+
+        private void AttackBehaviour()
+        {
+            _animator.SetTrigger(AttackAnimation);
         }
 
         private bool IsInRange()
@@ -42,6 +55,10 @@ namespace Combat
         public void Cancel()
         {
             _target = null;
+        }
+
+        private void Hit()
+        {
         }
     }
 }
