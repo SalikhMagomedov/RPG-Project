@@ -47,7 +47,7 @@ namespace Control
         {
             var hasHit = Physics.Raycast(GetMouseRay(), out var hit);
             if (!hasHit) return false;
-            if (Input.GetMouseButtonDown(0)) _mover.MoveTo(hit.point);
+            if (Input.GetMouseButtonDown(0)) _mover.StartMoveAction(hit.point);
 
             return true;
         }
