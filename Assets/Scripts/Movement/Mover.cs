@@ -6,11 +6,15 @@ namespace Movement
 {
     public class Mover : MonoBehaviour, IAction
     {
+        private static readonly int Property = Animator.StringToHash("Forward Speed");
+        private ActionScheduler _actionScheduler;
         private NavMeshAgent _agent;
         private Animator _animator;
-        private ActionScheduler _actionScheduler;
 
-        private static readonly int Property = Animator.StringToHash("Forward Speed");
+        public void Cancel()
+        {
+            _agent.isStopped = true;
+        }
 
         private void Awake()
         {
@@ -19,10 +23,7 @@ namespace Movement
             _agent = GetComponent<NavMeshAgent>();
         }
 
-        private void Update()
-        {
-            UpdateAnimator();
-        }
+        private void Update() => UpdateAnimator();
 
         private void UpdateAnimator()
         {
@@ -37,11 +38,6 @@ namespace Movement
         {
             _agent.destination = destination;
             _agent.isStopped = false;
-        }
-
-        public void Cancel()
-        {
-            _agent.isStopped = true;
         }
 
         public void StartMoveAction(Vector3 destination)

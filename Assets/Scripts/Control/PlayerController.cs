@@ -7,8 +7,8 @@ namespace Control
     public class PlayerController : MonoBehaviour
     {
         private Camera _camera;
-        private Mover _mover;
         private Fighter _fighter;
+        private Mover _mover;
 
         private void Awake()
         {
@@ -33,8 +33,9 @@ namespace Control
             foreach (var hit in hits)
             {
                 if (hit.transform == null) continue;
+
                 var target = hit.transform.GetComponent<CombatTarget>();
-                if (target == null) continue;
+                if (!_fighter.CanAttack(target)) continue;
 
                 if (Input.GetMouseButtonDown(0)) _fighter.Attack(target);
                 return true;
@@ -52,9 +53,6 @@ namespace Control
             return true;
         }
 
-        private Ray GetMouseRay()
-        {
-            return _camera.ScreenPointToRay(Input.mousePosition);
-        }
+        private Ray GetMouseRay() => _camera.ScreenPointToRay(Input.mousePosition);
     }
 }

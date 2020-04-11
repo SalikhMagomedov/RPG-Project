@@ -5,13 +5,11 @@ namespace Combat
 {
     public class Health : MonoBehaviour
     {
-        [SerializeField] private float health = 100f;
-        
         private static readonly int DieTrigger = Animator.StringToHash("Die");
 
-        private bool _isDead;
+        [SerializeField] private float health = 100f;
 
-        public bool IsDead => _isDead;
+        public bool IsDead { get; private set; }
 
         public void TakeDamage(float damage)
         {
@@ -21,9 +19,9 @@ namespace Combat
 
         private void Die()
         {
-            if (_isDead) return;
+            if (IsDead) return;
             GetComponent<Animator>().SetTrigger(DieTrigger);
-            _isDead = true;
+            IsDead = true;
         }
     }
 }
