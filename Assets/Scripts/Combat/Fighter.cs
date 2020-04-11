@@ -7,12 +7,14 @@ namespace Combat
     public class Fighter : MonoBehaviour, IAction
     {
         [SerializeField] private float weaponRange = 2f;
+        [SerializeField] private float timeBetweenAttacks = 2f;
 
         private Transform _target;
         private Mover _mover;
         private ActionScheduler _actionScheduler;
         private static readonly int AttackAnimation = Animator.StringToHash("Attack");
         private Animator _animator;
+        private float _timeSinceLastAttack;
 
         private void Awake()
         {
@@ -23,6 +25,8 @@ namespace Combat
 
         private void Update()
         {
+            _timeSinceLastAttack += Time.deltaTime;
+
             if (_target == null) return;
 
             if (!IsInRange())
@@ -38,7 +42,9 @@ namespace Combat
 
         private void AttackBehaviour()
         {
+            if (!(_timeSinceLastAttack > timeBetweenAttacks)) return;
             _animator.SetTrigger(AttackAnimation);
+            _timeSinceLastAttack = 0;
         }
 
         private bool IsInRange()
