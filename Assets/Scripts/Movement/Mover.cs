@@ -1,30 +1,26 @@
-﻿using Combat;
-using Core;
+﻿using Core;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace Movement
 {
-    public class Mover : MonoBehaviour
+    public class Mover : MonoBehaviour, IAction
     {
         private NavMeshAgent _agent;
         private Animator _animator;
 
         private static readonly int Property = Animator.StringToHash("Forward Speed");
-        private Fighter _fighter;
         private ActionScheduler _actionScheduler;
 
         private void Awake()
         {
             _actionScheduler = GetComponent<ActionScheduler>();
-            _fighter = GetComponent<Fighter>();
             _animator = GetComponent<Animator>();
             _agent = GetComponent<NavMeshAgent>();
         }
 
         private void Update()
         {
-            // if (Input.GetMouseButton(0)) MoveToCursor();
             UpdateAnimator();
         }
 
@@ -43,7 +39,7 @@ namespace Movement
             _agent.isStopped = false;
         }
 
-        public void Stop()
+        public void Cancel()
         {
             _agent.isStopped = true;
         }
@@ -51,7 +47,6 @@ namespace Movement
         public void StartMoveAction(Vector3 destination)
         {
             _actionScheduler.StartAction(this);
-            _fighter.Cancel();
             MoveTo(destination);
         }
     }

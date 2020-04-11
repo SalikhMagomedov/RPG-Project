@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Combat
 {
-    public class Fighter : MonoBehaviour
+    public class Fighter : MonoBehaviour, IAction
     {
         [SerializeField] private float weaponRange = 2f;
 
@@ -22,10 +22,10 @@ namespace Combat
         {
             if (_target == null) return;
 
-            if (_target != null && !IsInRange())
+            if (!IsInRange())
                 _mover.MoveTo(_target.position);
             else
-                _mover.Stop();
+                _mover.Cancel();
         }
 
         private bool IsInRange()
