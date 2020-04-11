@@ -15,6 +15,7 @@ namespace Combat
         private static readonly int AttackAnimation = Animator.StringToHash("Attack");
         private Animator _animator;
         private float _timeSinceLastAttack;
+        [SerializeField] private float weaponDamage = 10f;
 
         private void Awake()
         {
@@ -47,6 +48,12 @@ namespace Combat
             _timeSinceLastAttack = 0;
         }
 
+        private void Hit()
+        {
+            var healthComponent = _target.GetComponent<Health>();
+            healthComponent.TakeDamage(weaponDamage);
+        }
+
         private bool IsInRange()
         {
             return Vector3.Distance(transform.position, _target.position) < weaponRange;
@@ -61,10 +68,6 @@ namespace Combat
         public void Cancel()
         {
             _target = null;
-        }
-
-        private void Hit()
-        {
         }
     }
 }
