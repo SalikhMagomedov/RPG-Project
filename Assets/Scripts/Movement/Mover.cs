@@ -1,4 +1,5 @@
 ﻿using Combat;
+using Core;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -11,9 +12,11 @@ namespace Movement
 
         private static readonly int Property = Animator.StringToHash("Forward Speed");
         private Fighter _fighter;
+        private ActionScheduler _actionScheduler;
 
         private void Awake()
         {
+            _actionScheduler = GetComponent<ActionScheduler>();
             _fighter = GetComponent<Fighter>();
             _animator = GetComponent<Animator>();
             _agent = GetComponent<NavMeshAgent>();
@@ -47,6 +50,7 @@ namespace Movement
 
         public void StartMoveAction(Vector3 destination)
         {
+            _actionScheduler.StartAction(this);
             _fighter.Cancel();
             MoveTo(destination);
         }

@@ -1,4 +1,5 @@
-﻿using Movement;
+﻿using Core;
+using Movement;
 using UnityEngine;
 
 namespace Combat
@@ -9,9 +10,11 @@ namespace Combat
 
         private Transform _target;
         private Mover _mover;
+        private ActionScheduler _actionScheduler;
 
         private void Awake()
         {
+            _actionScheduler = GetComponent<ActionScheduler>();
             _mover = GetComponent<Mover>();
         }
 
@@ -32,6 +35,7 @@ namespace Combat
 
         public void Attack(CombatTarget target)
         {
+            _actionScheduler.StartAction(this);
             _target = target.transform;
         }
 
