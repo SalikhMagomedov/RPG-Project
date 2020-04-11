@@ -4,12 +4,12 @@ namespace Combat
 {
     public class Health : MonoBehaviour
     {
-         private float _health = 100f;
+         [SerializeField] private float health = 100f;
 
          public void TakeDamage(float damage)
          {
-             _health = Mathf.Max(_health - damage, 0);
-             print(_health);
+             health = Mathf.Max(health - damage, 0);
+             print(health);
          }
     }
 }
