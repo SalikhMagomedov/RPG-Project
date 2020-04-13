@@ -10,6 +10,7 @@ namespace Movement
         private ActionScheduler _actionScheduler;
         private NavMeshAgent _agent;
         private Animator _animator;
+        private Health _health;
 
         public void Cancel()
         {
@@ -18,12 +19,17 @@ namespace Movement
 
         private void Awake()
         {
+            _health = GetComponent<Health>();
             _actionScheduler = GetComponent<ActionScheduler>();
             _animator = GetComponent<Animator>();
             _agent = GetComponent<NavMeshAgent>();
         }
 
-        private void Update() => UpdateAnimator();
+        private void Update()
+        {
+            _agent.enabled = !_health.IsDead;
+            UpdateAnimator();
+        }
 
         private void UpdateAnimator()
         {

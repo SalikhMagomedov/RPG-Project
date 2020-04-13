@@ -13,7 +13,7 @@ namespace Combat
         private Animator _animator;
         private Mover _mover;
         private Health _target;
-        private float _timeSinceLastAttack;
+        private float _timeSinceLastAttack = Mathf.Infinity;
 
         [SerializeField] private float timeBetweenAttacks = 2f;
         [SerializeField] private float weaponDamage = 10f;

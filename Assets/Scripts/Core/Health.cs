@@ -1,7 +1,6 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Combat
+namespace Core
 {
     public class Health : MonoBehaviour
     {
@@ -14,14 +13,16 @@ namespace Combat
         public void TakeDamage(float damage)
         {
             health = Mathf.Max(health - damage, 0);
-            if (Math.Abs(health) < float.Epsilon) Die();
+            if (Mathf.Abs(health) < Mathf.Epsilon) Die();
         }
 
         private void Die()
         {
             if (IsDead) return;
-            GetComponent<Animator>().SetTrigger(DieTrigger);
+
             IsDead = true;
+            GetComponent<Animator>().SetTrigger(DieTrigger);
+            GetComponent<ActionScheduler>().CancelCurrentAction();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Combat;
+using Core;
 using Movement;
 using UnityEngine;
 
@@ -9,9 +10,11 @@ namespace Control
         private Camera _camera;
         private Fighter _fighter;
         private Mover _mover;
+        private Health _health;
 
         private void Awake()
         {
+            _health = GetComponent<Health>();
             _fighter = GetComponent<Fighter>();
             _mover = GetComponent<Mover>();
             _camera = Camera.main;
@@ -19,6 +22,7 @@ namespace Control
 
         private void Update()
         {
+            if (_health.IsDead) return;
             if (InteractWithCombat()) return;
             if (InteractWithMovement()) return;
         }
