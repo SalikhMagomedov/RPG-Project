@@ -1,5 +1,6 @@
 ﻿using Combat;
 using Core;
+using Movement;
 using UnityEngine;
 
 namespace Control
@@ -9,14 +10,22 @@ namespace Control
         private Fighter _fighter;
         private Health _health;
         private GameObject _player;
+        private Mover _mover;
+        private Vector3 _guardPosition;
 
         [SerializeField] private float chaseDistance = 5f;
 
         private void Awake()
         {
+            _mover = GetComponent<Mover>();
             _health = GetComponent<Health>();
             _fighter = GetComponent<Fighter>();
             _player = GameObject.FindWithTag("Player");
+        }
+
+        private void Start()
+        {
+            _guardPosition = transform.position;
         }
 
         private void Update()
@@ -25,7 +34,7 @@ namespace Control
             if (InAttackRangeOfPlayer() && _fighter.CanAttack(_player))
                 _fighter.Attack(_player);
             else
-                _fighter.Cancel();
+                _mover.StartMoveAction(_guardPosition);
         }
 
         private bool InAttackRangeOfPlayer()
