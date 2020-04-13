@@ -33,5 +33,11 @@ namespace Control
             var distanceToPlayer = Vector3.Distance(_player.transform.position, transform.position);
             return distanceToPlayer <= chaseDistance;
         }
+
+        private void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(transform.position, chaseDistance);
+        }
     }
 }

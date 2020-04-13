@@ -7,6 +7,7 @@ namespace Movement
     public class Mover : MonoBehaviour, IAction
     {
         private static readonly int Property = Animator.StringToHash("Forward Speed");
+        
         private ActionScheduler _actionScheduler;
         private NavMeshAgent _agent;
         private Animator _animator;
