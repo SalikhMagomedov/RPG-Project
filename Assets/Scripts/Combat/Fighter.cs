@@ -8,12 +8,11 @@ namespace Combat
     {
         private static readonly int AttackAnimation = Animator.StringToHash("Attack");
         private static readonly int StopAttackTrigger = Animator.StringToHash("StopAttack");
+
         private ActionScheduler _actionScheduler;
         private Animator _animator;
         private Mover _mover;
-
         private Health _target;
-
         private float _timeSinceLastAttack;
 
         [SerializeField] private float timeBetweenAttacks = 2f;
@@ -77,14 +76,14 @@ namespace Combat
 
         private bool IsInRange() => Vector3.Distance(transform.position, _target.transform.position) < weaponRange;
 
-        public bool CanAttack(CombatTarget combatTarget)
+        public bool CanAttack(GameObject combatTarget)
         {
             if (combatTarget == null) return false;
             var targetToTest = combatTarget.GetComponent<Health>();
             return targetToTest != null && !targetToTest.IsDead;
         }
 
-        public void Attack(CombatTarget target)
+        public void Attack(GameObject target)
         {
             _actionScheduler.StartAction(this);
             _target = target.GetComponent<Health>();

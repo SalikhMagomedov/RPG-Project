@@ -1,23 +1,37 @@
-﻿using UnityEngine;
+﻿using Combat;
+using UnityEngine;
 
 namespace Control
 {
     public class AiController : MonoBehaviour
     {
         private GameObject _player;
+        private Fighter _fighter;
 
         [SerializeField] private float chaseDistance = 5f;
 
         private void Awake()
         {
+            _fighter = GetComponent<Fighter>();
             _player = GameObject.FindWithTag("Player");
         }
 
         private void Update()
         {
-            if (DistanceToPlayer() <= chaseDistance) print($"{gameObject.name} must chase");
+            if (InAttackRangeOfPlayer() && _fighter.CanAttack(_player))
+            {
+                _fighter.Attack(_player);
+            }
+            else
+            {
+                _fighter.Cancel();
+            }
         }
 
-        private float DistanceToPlayer() => Vector3.Distance(_player.transform.position, transform.position);
+        private bool InAttackRangeOfPlayer()
+        {
+            var distanceToPlayer = Vector3.Distance(_player.transform.position, transform.position);
+            return distanceToPlayer <= chaseDistance;
+        }
     }
 }
