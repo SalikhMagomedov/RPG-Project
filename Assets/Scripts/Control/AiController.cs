@@ -14,9 +14,11 @@ namespace Control
         private Health _health;
         private Mover _mover;
         private GameObject _player;
+        private float _timeSinceArrivedWaypoint = Mathf.Infinity;
         private float _timeSinceLastSawPlayer = Mathf.Infinity;
 
         [SerializeField] private float chaseDistance = 5f;
+        [SerializeField] private float dwellTime = 3f;
         [SerializeField] private PatrolPath patrolPath;
         [SerializeField] private float suspicionTime = 5f;
         [SerializeField] private float waypointTolerance = 1f;
@@ -52,7 +54,13 @@ namespace Control
                 PatrolBehaviour();
             }
 
+            UpdateTimers();
+        }
+
+        private void UpdateTimers()
+        {
             _timeSinceLastSawPlayer += Time.deltaTime;
+            _timeSinceArrivedWaypoint += Time.deltaTime;
         }
 
         private void PatrolBehaviour()
@@ -61,12 +69,16 @@ namespace Control
 
             if (patrolPath != null)
             {
-                if (AtWaypoint()) CycleWaypoint();
+                if (AtWaypoint())
+                {
+                    _timeSinceArrivedWaypoint = 0;
+                    CycleWaypoint();
+                }
 
                 nextPosition = GetCurrentWaypoint();
             }
 
-            _mover.StartMoveAction(nextPosition);
+            if (_timeSinceArrivedWaypoint > dwellTime) _mover.StartMoveAction(nextPosition);
         }
 
         private void CycleWaypoint()

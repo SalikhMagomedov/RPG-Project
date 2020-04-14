@@ -43,7 +43,7 @@ namespace Control
 
                 if (!_fighter.CanAttack(target.gameObject)) continue;
 
-                if (Input.GetMouseButtonDown(0)) _fighter.Attack(target.gameObject);
+                if (Input.GetMouseButton(0)) _fighter.Attack(target.gameObject);
                 return true;
             }
 
