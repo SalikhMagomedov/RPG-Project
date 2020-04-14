@@ -8,6 +8,7 @@ namespace Control
     public class AiController : MonoBehaviour
     {
         private ActionScheduler _actionScheduler;
+        private int _currentWaypointIndex;
         private Fighter _fighter;
         private Vector3 _guardPosition;
         private Health _health;
@@ -16,7 +17,9 @@ namespace Control
         private float _timeSinceLastSawPlayer = Mathf.Infinity;
 
         [SerializeField] private float chaseDistance = 5f;
+        [SerializeField] private PatrolPath patrolPath;
         [SerializeField] private float suspicionTime = 5f;
+        [SerializeField] private float waypointTolerance = 1f;
 
         private void Awake()
         {
@@ -46,15 +49,37 @@ namespace Control
             }
             else
             {
-                GuardBehaviour();
+                PatrolBehaviour();
             }
 
             _timeSinceLastSawPlayer += Time.deltaTime;
         }
 
-        private void GuardBehaviour()
+        private void PatrolBehaviour()
         {
-            _mover.StartMoveAction(_guardPosition);
+            var nextPosition = _guardPosition;
+
+            if (patrolPath != null)
+            {
+                if (AtWaypoint()) CycleWaypoint();
+
+                nextPosition = GetCurrentWaypoint();
+            }
+
+            _mover.StartMoveAction(nextPosition);
+        }
+
+        private void CycleWaypoint()
+        {
+            _currentWaypointIndex = patrolPath.GetNextIndex(_currentWaypointIndex);
+        }
+
+        private Vector3 GetCurrentWaypoint() => patrolPath.GetWaypoint(_currentWaypointIndex);
+
+        private bool AtWaypoint()
+        {
+            var distanceToWaypoint = Vector3.Distance(transform.position, GetCurrentWaypoint());
+            return distanceToWaypoint < waypointTolerance;
         }
 
         private void SuspicionBehaviour()

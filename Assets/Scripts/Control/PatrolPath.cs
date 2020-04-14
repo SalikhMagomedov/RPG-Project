@@ -11,10 +11,12 @@ namespace Control
             for (var i = 0; i < transform.childCount; i++)
             {
                 Gizmos.DrawSphere(GetWaypoint(i), WaypointGizmoRadius);
-                Gizmos.DrawLine(GetWaypoint(i), GetWaypoint(i + 1 < transform.childCount ? i + 1 : 0));
+                Gizmos.DrawLine(GetWaypoint(i), GetWaypoint(GetNextIndex(i)));
             }
         }
 
-        private Vector3 GetWaypoint(int i) => transform.GetChild(i).position;
+        public int GetNextIndex(int i) => i + 1 < transform.childCount ? i + 1 : 0;
+
+        public Vector3 GetWaypoint(int i) => transform.GetChild(i).position;
     }
 }
