@@ -89,6 +89,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 212139f80c5fffd49bdf5241a494cdd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxSpeed: 6
 --- !u!114 &114255040322663476
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -101,9 +102,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9c28565675247c5922b28f9f0538386, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponRange: 2
   timeBetweenAttacks: 2
   weaponDamage: 10
+  weaponRange: 2
 --- !u!114 &114611392549944930
 MonoBehaviour:
   m_ObjectHideFlags: 0

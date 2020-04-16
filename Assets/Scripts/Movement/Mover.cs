@@ -13,6 +13,8 @@ namespace Movement
         private Animator _animator;
         private Health _health;
 
+        [SerializeField] private float maxSpeed = 6f;
+        
         public void Cancel()
         {
             _agent.isStopped = true;
@@ -41,16 +43,17 @@ namespace Movement
             _animator.SetFloat(Property, speed);
         }
 
-        public void MoveTo(Vector3 destination)
+        public void MoveTo(Vector3 destination, float speedFraction)
         {
             _agent.destination = destination;
+            _agent.speed = maxSpeed * Mathf.Clamp01(speedFraction);
             _agent.isStopped = false;
         }
 
-        public void StartMoveAction(Vector3 destination)
+        public void StartMoveAction(Vector3 destination, float speedFraction)
         {
             _actionScheduler.StartAction(this);
-            MoveTo(destination);
+            MoveTo(destination, speedFraction);
         }
     }
 }

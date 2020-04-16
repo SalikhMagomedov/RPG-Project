@@ -22,6 +22,8 @@ namespace Control
         [SerializeField] private PatrolPath patrolPath;
         [SerializeField] private float suspicionTime = 5f;
         [SerializeField] private float waypointTolerance = 1f;
+        [Range(0, 1)]
+        [SerializeField] private float patrolSpeedFraction = .2f;
 
         private void Awake()
         {
@@ -78,7 +80,7 @@ namespace Control
                 nextPosition = GetCurrentWaypoint();
             }
 
-            if (_timeSinceArrivedWaypoint > dwellTime) _mover.StartMoveAction(nextPosition);
+            if (_timeSinceArrivedWaypoint > dwellTime) _mover.StartMoveAction(nextPosition, patrolSpeedFraction);
         }
 
         private void CycleWaypoint()
