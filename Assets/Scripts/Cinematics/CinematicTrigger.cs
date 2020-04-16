@@ -9,7 +9,7 @@ namespace Cinematics
         
         private void OnTriggerEnter(Collider other)
         {
-            if (!other.CompareTag("Player") && !_alreadyTriggered) return;
+            if (!other.CompareTag("Player") || _alreadyTriggered) return;
 
             GetComponent<PlayableDirector>().Play();
             _alreadyTriggered = true;
