@@ -8,6 +8,7 @@ namespace SceneManagement
 {
     public class Portal : MonoBehaviour
     {
+        [SerializeField] private DestinationIdentifier destination;
         [SerializeField] private int sceneToLoad = -1;
         [SerializeField] private Transform spawnPoint;
 
@@ -20,6 +21,12 @@ namespace SceneManagement
 
         private IEnumerator Transition()
         {
+            if (sceneToLoad < 0)
+            {
+                Debug.LogError("Scene to load not set.");
+                yield break;
+            }
+
             DontDestroyOnLoad(gameObject);
 
             yield return SceneManager.LoadSceneAsync(sceneToLoad);
@@ -36,6 +43,16 @@ namespace SceneManagement
             player.transform.rotation = otherPortal.spawnPoint.rotation;
         }
 
-        private Portal GetOtherPortal() => FindObjectsOfType<Portal>().FirstOrDefault(portal => portal != this);
+        private Portal GetOtherPortal() => FindObjectsOfType<Portal>()
+            .FirstOrDefault(portal => portal != this && portal.destination == destination);
+
+        private enum DestinationIdentifier
+        {
+            A,
+            B,
+            C,
+            D,
+            E
+        }
     }
 }
