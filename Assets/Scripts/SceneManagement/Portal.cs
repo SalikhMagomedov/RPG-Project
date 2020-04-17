@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace SceneManagement
@@ -11,7 +12,15 @@ namespace SceneManagement
         {
             if (!other.CompareTag("Player")) return;
 
-            SceneManager.LoadSceneAsync(sceneToLoad);
+            StartCoroutine(Transition());
+        }
+
+        private IEnumerator Transition()
+        {
+            DontDestroyOnLoad(gameObject);
+            yield return SceneManager.LoadSceneAsync(sceneToLoad);
+            print("Scene Loaded");
+            Destroy(gameObject);
         }
     }
 }
