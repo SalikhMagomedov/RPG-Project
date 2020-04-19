@@ -20,12 +20,12 @@ namespace RPG.SceneManagement
             if (Input.GetKeyDown(KeyCode.S)) Save();
         }
 
-        private void Save()
+        public void Save()
         {
             _savingSystem.Save(DefaultSaveFile);
         }
 
-        private void Load()
+        public void Load()
         {
             _savingSystem.Load(DefaultSaveFile);
         }
