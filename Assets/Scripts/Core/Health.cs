@@ -1,14 +1,23 @@
-﻿using UnityEngine;
+﻿using RPG.Saving;
+using UnityEngine;
 
 namespace RPG.Core
 {
-    public class Health : MonoBehaviour
+    public class Health : MonoBehaviour, ISaveable
     {
         private static readonly int DieTrigger = Animator.StringToHash("Die");
 
         [SerializeField] private float health = 100f;
 
         public bool IsDead { get; private set; }
+
+        public object CaptureState() => health;
+
+        public void RestoreState(object state)
+        {
+            health = (float) state;
+            if (Mathf.Abs(health) < Mathf.Epsilon) Die();
+        }
 
         public void TakeDamage(float damage)
         {
