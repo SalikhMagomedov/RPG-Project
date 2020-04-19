@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 
-namespace SceneManagement
+namespace RPG.SceneManagement
 {
     public class Portal : MonoBehaviour
     {

@@ -1,8 +1,8 @@
-﻿using Core;
-using Movement;
+﻿using RPG.Core;
+using RPG.Movement;
 using UnityEngine;
 
-namespace Combat
+namespace RPG.Combat
 {
     public class Fighter : MonoBehaviour, IAction
     {
