@@ -1,23 +1,33 @@
 ﻿using RPG.Core;
+using RPG.Saving;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace RPG.Movement
 {
-    public class Mover : MonoBehaviour, IAction
+    public class Mover : MonoBehaviour, IAction, ISaveable
     {
         private static readonly int Property = Animator.StringToHash("Forward Speed");
-        
+
         private ActionScheduler _actionScheduler;
         private NavMeshAgent _agent;
         private Animator _animator;
         private Health _health;
 
         [SerializeField] private float maxSpeed = 6f;
-        
+
         public void Cancel()
         {
             _agent.isStopped = true;
+        }
+
+        public object CaptureState() => new SerializableVector3(transform.position);
+
+        public void RestoreState(object state)
+        {
+            _agent.enabled = false;
+            transform.position = ((SerializableVector3) state).ToVector();
+            _agent.enabled = true;
         }
 
         private void Awake()
