@@ -1,9 +1,8 @@
-﻿using RPG.Saving;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace RPG.Core
 {
-    public class Health : MonoBehaviour, ISaveable
+    public class Health : MonoBehaviour
     {
         private static readonly int DieTrigger = Animator.StringToHash("Die");
 

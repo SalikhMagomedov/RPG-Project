@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 namespace RPG.Movement
 {
-    public class Mover : MonoBehaviour, IAction, ISaveable
+    public class Mover : MonoBehaviour, IAction
     {
         private static readonly int Property = Animator.StringToHash("Forward Speed");
 
