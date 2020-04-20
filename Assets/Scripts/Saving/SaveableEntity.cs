@@ -1,7 +1,7 @@
-﻿using RPG.Core;
+﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace RPG.Saving
 {
@@ -9,26 +9,26 @@ namespace RPG.Saving
     public class SaveableEntity : MonoBehaviour
     {
         [SerializeField] private string uniqueIdentifier = "";
-        
-        private NavMeshAgent _navMeshAgent;
-        private ActionScheduler _actionScheduler;
 
         public string UniqueIdentifier => uniqueIdentifier;
 
-        private void Awake()
+        public object CaptureState()
         {
-            _actionScheduler = GetComponent<ActionScheduler>();
-            _navMeshAgent = GetComponent<NavMeshAgent>();
-        }
+            var state = new Dictionary<string, object>();
+            foreach (var saveable in GetComponents<ISaveable>())
+                state[saveable.GetType().ToString()] = saveable.CaptureState();
 
-        public object CaptureState() => new SerializableVector3(transform.position);
+            return state;
+        }
 
         public void RestoreState(object state)
         {
-            _navMeshAgent.enabled = false;
-            transform.position = ((SerializableVector3) state).ToVector3();
-            _navMeshAgent.enabled = true;
-            _actionScheduler.CancelCurrentAction();
+            var stateDict = (Dictionary<string, object>) state;
+            foreach (var saveable in GetComponents<ISaveable>())
+            {
+                var typeString = saveable.GetType().ToString();
+                if (stateDict.ContainsKey(typeString)) saveable.RestoreState(stateDict[typeString]);
+            }
         }
 
 #if UNITY_EDITOR
@@ -40,8 +40,8 @@ namespace RPG.Saving
             var property = serializedObject.FindProperty("uniqueIdentifier");
 
             if (!string.IsNullOrEmpty(property.stringValue)) return;
-            
-            property.stringValue = System.Guid.NewGuid().ToString();
+
+            property.stringValue = Guid.NewGuid().ToString();
             serializedObject.ApplyModifiedProperties();
         }
 #endif
