@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.IO;
+using UnityEngine;
 
 namespace RPG.Saving
 {
@@ -6,12 +7,15 @@ namespace RPG.Saving
     {
         public void Save(string saveFile)
         {
-            print($"Saving to {saveFile}");
+            print($"Saving to {GetPathFromSaveFile(saveFile)}");
         }
 
         public void Load(string saveFile)
         {
-            print($"Load from {saveFile}");
+            print($"Load from {GetPathFromSaveFile(saveFile)}");
         }
+
+        private string GetPathFromSaveFile(string saveFile) =>
+            Path.Combine(Application.persistentDataPath, saveFile + ".sav");
     }
 }
