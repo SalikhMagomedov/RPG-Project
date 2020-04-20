@@ -26,7 +26,7 @@ namespace RPG.Movement
         public void RestoreState(object state)
         {
             _agent.enabled = false;
-            transform.position = ((SerializableVector3) state).ToVector();
+            transform.position = ((SerializableVector3) state).ToVector3();
             _agent.enabled = true;
         }
 

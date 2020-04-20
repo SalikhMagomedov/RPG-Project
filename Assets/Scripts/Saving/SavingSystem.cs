@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
@@ -12,14 +13,10 @@ namespace RPG.Saving
             print($"Saving to {path}");
             using (var stream = File.Open(path, FileMode.Create))
             {
-                var playerTransform = GetPlayerTransform();
                 var formatter = new BinaryFormatter();
-                var position = new SerializableVector3(playerTransform.position);
-                formatter.Serialize(stream, position);
+                formatter.Serialize(stream, CaptureState());
             }
         }
-
-        private Transform GetPlayerTransform() => GameObject.FindWithTag("Player").transform;
 
         public void Load(string saveFile)
         {
@@ -28,9 +25,26 @@ namespace RPG.Saving
             using (var stream = File.Open(path, FileMode.Open))
             {
                 var formatter = new BinaryFormatter();
-                var position = (SerializableVector3) formatter.Deserialize(stream);
-                var playerTransform = GetPlayerTransform();
-                playerTransform.position = position.ToVector3();
+                RestoreState(formatter.Deserialize(stream));
+            }
+        }
+
+        private object CaptureState()
+        {
+            var state = new Dictionary<string, object>();
+            foreach (var saveable in FindObjectsOfType<SaveableEntity>())
+            {
+                state[saveable.UniqueIdentifier] = saveable.CaptureState();
+            }
+            return state;
+        }
+
+        private void RestoreState(object state)
+        {
+            var stateDict = (Dictionary<string, object>) state;
+            foreach (var savable in FindObjectsOfType<SaveableEntity>())
+            {
+                savable.RestoreState(stateDict[savable.UniqueIdentifier]);
             }
         }
 
