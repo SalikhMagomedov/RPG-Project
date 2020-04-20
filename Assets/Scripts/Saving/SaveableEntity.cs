@@ -8,6 +8,8 @@ namespace RPG.Saving
     [ExecuteAlways]
     public class SaveableEntity : MonoBehaviour
     {
+        private static readonly Dictionary<string, SaveableEntity> GlobalLookup = new Dictionary<string, SaveableEntity>();
+
         [SerializeField] private string uniqueIdentifier = "";
 
         public string UniqueIdentifier => uniqueIdentifier;
@@ -39,10 +41,31 @@ namespace RPG.Saving
             var serializedObject = new SerializedObject(this);
             var property = serializedObject.FindProperty("uniqueIdentifier");
 
-            if (!string.IsNullOrEmpty(property.stringValue)) return;
+            if (string.IsNullOrEmpty(property.stringValue) || !IsUnique(property.stringValue))
+            {
+                property.stringValue = Guid.NewGuid().ToString();
+                serializedObject.ApplyModifiedProperties();
+            }
 
-            property.stringValue = Guid.NewGuid().ToString();
-            serializedObject.ApplyModifiedProperties();
+            GlobalLookup[property.stringValue] = this;
+        }
+
+        private bool IsUnique(string candidate)
+        {
+            if (!GlobalLookup.ContainsKey(candidate)) return true;
+
+            if (GlobalLookup[candidate] == this) return true;
+
+            if (GlobalLookup[candidate] == null)
+            {
+                GlobalLookup.Remove(candidate);
+                return true;
+            }
+
+            if (GlobalLookup[candidate].uniqueIdentifier == candidate) return false;
+
+            GlobalLookup.Remove(candidate);
+            return true;
         }
 #endif
     }
