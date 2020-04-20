@@ -1,6 +1,7 @@
-﻿using System;
+﻿using RPG.Core;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace RPG.Saving
 {
@@ -8,13 +9,26 @@ namespace RPG.Saving
     public class SaveableEntity : MonoBehaviour
     {
         [SerializeField] private string uniqueIdentifier = "";
+        
+        private NavMeshAgent _navMeshAgent;
+        private ActionScheduler _actionScheduler;
 
         public string UniqueIdentifier => uniqueIdentifier;
 
-        public object CaptureState() => null;
+        private void Awake()
+        {
+            _actionScheduler = GetComponent<ActionScheduler>();
+            _navMeshAgent = GetComponent<NavMeshAgent>();
+        }
+
+        public object CaptureState() => new SerializableVector3(transform.position);
 
         public void RestoreState(object state)
         {
+            _navMeshAgent.enabled = false;
+            transform.position = ((SerializableVector3) state).ToVector3();
+            _navMeshAgent.enabled = true;
+            _actionScheduler.CancelCurrentAction();
         }
 
 #if UNITY_EDITOR
@@ -27,7 +41,7 @@ namespace RPG.Saving
 
             if (!string.IsNullOrEmpty(property.stringValue)) return;
             
-            property.stringValue = Guid.NewGuid().ToString();
+            property.stringValue = System.Guid.NewGuid().ToString();
             serializedObject.ApplyModifiedProperties();
         }
 #endif
