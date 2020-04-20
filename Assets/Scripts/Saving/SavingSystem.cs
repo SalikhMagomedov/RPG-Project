@@ -19,7 +19,16 @@ namespace RPG.Saving
 
         public void Load(string saveFile)
         {
-            print($"Load from {GetPathFromSaveFile(saveFile)}");
+            var path = GetPathFromSaveFile(saveFile);
+            print($"Load from {path}");
+            using (var stream = File.Open(path, FileMode.Open))
+            {
+                var buffer = new byte[stream.Length];
+                stream.ReadAsync(buffer, 0, buffer.Length);
+
+                var loadedString = Encoding.UTF8.GetString(buffer);
+                print(loadedString);
+            }
         }
 
         private string GetPathFromSaveFile(string saveFile) =>
