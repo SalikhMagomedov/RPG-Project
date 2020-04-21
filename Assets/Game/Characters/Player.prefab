@@ -125,6 +125,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 22100000, guid: c3e4a5530de1a9a4a9829c38bf622b88,
         type: 2}
+    - target: {fileID: 114255040322663476, guid: 4d61b1138b43db54cb719b7d57c7c49a,
+        type: 3}
+      propertyPath: weapon
+      value: 
+      objectReference: {fileID: 11400000, guid: 0bdb3eb15b38a9740a4b965bcfa25511,
+        type: 2}
     - target: {fileID: 1031595387290998320, guid: 4d61b1138b43db54cb719b7d57c7c49a,
         type: 3}
       propertyPath: m_LocalPosition.x
