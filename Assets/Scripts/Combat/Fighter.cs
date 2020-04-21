@@ -14,10 +14,12 @@ namespace RPG.Combat
         private Mover _mover;
         private Health _target;
         private float _timeSinceLastAttack = Mathf.Infinity;
-
+        
         [SerializeField] private float timeBetweenAttacks = 2f;
         [SerializeField] private float weaponDamage = 10f;
         [SerializeField] private float weaponRange = 2f;
+        [SerializeField] private GameObject weaponPrefab;
+        [SerializeField] private Transform handTransform;
 
         public void Cancel()
         {
@@ -37,6 +39,16 @@ namespace RPG.Combat
             _animator = GetComponent<Animator>();
             _actionScheduler = GetComponent<ActionScheduler>();
             _mover = GetComponent<Mover>();
+        }
+
+        private void Start()
+        {
+            SpawnWeapon();
+        }
+
+        private void SpawnWeapon()
+        {
+            Instantiate(weaponPrefab, handTransform);
         }
 
         private void Update()
