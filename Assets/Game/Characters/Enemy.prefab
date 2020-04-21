@@ -51,6 +51,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114255040322663476, guid: 4d61b1138b43db54cb719b7d57c7c49a,
+        type: 3}
+      propertyPath: weapon
+      value: 
+      objectReference: {fileID: 11400000, guid: 56ac62d6d4971e742b36f8c65651edd8,
+        type: 2}
+    - target: {fileID: 114255040322663476, guid: 4d61b1138b43db54cb719b7d57c7c49a,
+        type: 3}
+      propertyPath: handTransform
+      value: 
+      objectReference: {fileID: 8754377377120160389}
     - target: {fileID: 1031595387290998320, guid: 4d61b1138b43db54cb719b7d57c7c49a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -192,3 +203,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 30cf93deff988e74e88a144bd2127c18, type: 3}
+--- !u!4 &8754377377120160389 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 423694, guid: 30cf93deff988e74e88a144bd2127c18,
+    type: 3}
+  m_PrefabInstance: {fileID: 8754377377119796619}
+  m_PrefabAsset: {fileID: 0}

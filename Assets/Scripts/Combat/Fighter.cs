@@ -14,11 +14,9 @@ namespace RPG.Combat
         private Mover _mover;
         private Health _target;
         private float _timeSinceLastAttack = Mathf.Infinity;
-        
-        [SerializeField] private float timeBetweenAttacks = 2f;
-        [SerializeField] private float weaponDamage = 10f;
-        [SerializeField] private float weaponRange = 2f;
+
         [SerializeField] private Transform handTransform;
+        [SerializeField] private float timeBetweenAttacks = 2f;
         [SerializeField] private Weapon weapon;
 
         public void Cancel()
@@ -49,7 +47,7 @@ namespace RPG.Combat
         private void SpawnWeapon()
         {
             if (weapon == null) return;
-            
+
             weapon.Spawn(handTransform, _animator);
         }
 
@@ -86,10 +84,11 @@ namespace RPG.Combat
         private void Hit()
         {
             if (_target == null) return;
-            _target.TakeDamage(weaponDamage);
+            _target.TakeDamage(weapon.Damage);
         }
 
-        private bool IsInRange() => Vector3.Distance(transform.position, _target.transform.position) < weaponRange;
+        private bool IsInRange() =>
+            Vector3.Distance(transform.position, _target.transform.position) < weapon.Range;
 
         public bool CanAttack(GameObject combatTarget)
         {
