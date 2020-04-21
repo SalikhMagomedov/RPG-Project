@@ -20,6 +20,7 @@ namespace RPG.Combat
         [SerializeField] private float weaponRange = 2f;
         [SerializeField] private GameObject weaponPrefab;
         [SerializeField] private Transform handTransform;
+        [SerializeField] private AnimatorOverrideController weaponOverride;
 
         public void Cancel()
         {
@@ -49,6 +50,7 @@ namespace RPG.Combat
         private void SpawnWeapon()
         {
             Instantiate(weaponPrefab, handTransform);
+            _animator.runtimeAnimatorController = weaponOverride;
         }
 
         private void Update()
