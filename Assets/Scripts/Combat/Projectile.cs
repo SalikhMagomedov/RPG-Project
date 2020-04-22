@@ -6,7 +6,7 @@ namespace RPG.Combat
     public class Projectile : MonoBehaviour
     {
         private Health _target;
-        private float _damage = 0;
+        private float _damage;
         
         [SerializeField] private float speed;
 
