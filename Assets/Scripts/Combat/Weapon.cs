@@ -32,7 +32,7 @@ namespace RPG.Combat
         {
             var projectileInstance =
                 Instantiate(projectile, GetTransform(rightHand, leftHand).position, Quaternion.identity);
-            projectileInstance.Target = target;
+            projectileInstance.SetTarget(target, damage);
         }
     }
 }
