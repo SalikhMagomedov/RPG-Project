@@ -16,7 +16,8 @@ namespace RPG.Combat
         private float _timeSinceLastAttack = Mathf.Infinity;
         private Weapon _currentWeapon;
 
-        [SerializeField] private Transform handTransform;
+        [SerializeField] private Transform rightHandTransform;
+        [SerializeField] private Transform leftHandTransform;
         [SerializeField] private float timeBetweenAttacks = 2f;
         [SerializeField] private Weapon defaultWeapon;
 
@@ -48,7 +49,7 @@ namespace RPG.Combat
         public void EquipWeapon(Weapon weapon)
         {
             _currentWeapon = weapon;
-            weapon.Spawn(handTransform, _animator);
+            weapon.Spawn(rightHandTransform, leftHandTransform, _animator);
         }
 
         private void Update()
