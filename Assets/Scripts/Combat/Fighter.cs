@@ -11,15 +11,15 @@ namespace RPG.Combat
 
         private ActionScheduler _actionScheduler;
         private Animator _animator;
+        private Weapon _currentWeapon;
         private Mover _mover;
         private Health _target;
         private float _timeSinceLastAttack = Mathf.Infinity;
-        private Weapon _currentWeapon;
-
-        [SerializeField] private Transform rightHandTransform;
-        [SerializeField] private Transform leftHandTransform;
-        [SerializeField] private float timeBetweenAttacks = 2f;
+        
         [SerializeField] private Weapon defaultWeapon;
+        [SerializeField] private Transform leftHandTransform;
+        [SerializeField] private Transform rightHandTransform;
+        [SerializeField] private float timeBetweenAttacks = 2f;
 
         public void Cancel()
         {
@@ -85,7 +85,16 @@ namespace RPG.Combat
         private void Hit()
         {
             if (_target == null) return;
-            _target.TakeDamage(_currentWeapon.Damage);
+
+            if (_currentWeapon.HasProjectile())
+                _currentWeapon.LaunchProjectile(rightHandTransform, leftHandTransform, _target);
+            else
+                _target.TakeDamage(_currentWeapon.Damage);
+        }
+
+        private void Shoot()
+        {
+            Hit();
         }
 
         private bool IsInRange() =>

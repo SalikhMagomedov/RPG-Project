@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using RPG.Core;
+using UnityEngine;
 
 namespace RPG.Combat
 {
@@ -6,10 +7,11 @@ namespace RPG.Combat
     public class Weapon : ScriptableObject
     {
         [SerializeField] private AnimatorOverrideController animatorOverride;
-        [SerializeField] private GameObject weaponPrefab;
         [SerializeField] private float damage = 10f;
-        [SerializeField] private float range = 2f;
         [SerializeField] private bool isRightHanded = true;
+        [SerializeField] private Projectile projectile;
+        [SerializeField] private float range = 2f;
+        [SerializeField] private GameObject weaponPrefab;
 
         public float Damage => damage;
 
@@ -17,9 +19,20 @@ namespace RPG.Combat
 
         public void Spawn(Transform rightHand, Transform leftHand, Animator animator)
         {
-            if (weaponPrefab != null) Instantiate(weaponPrefab, isRightHanded ? rightHand : leftHand);
+            if (weaponPrefab != null) Instantiate(weaponPrefab, GetTransform(rightHand, leftHand));
 
             if (animatorOverride != null) animator.runtimeAnimatorController = animatorOverride;
+        }
+
+        private Transform GetTransform(Transform rightHand, Transform leftHand) => isRightHanded ? rightHand : leftHand;
+
+        public bool HasProjectile() => projectile != null;
+
+        public void LaunchProjectile(Transform rightHand, Transform leftHand, Health target)
+        {
+            var projectileInstance =
+                Instantiate(projectile, GetTransform(rightHand, leftHand).position, Quaternion.identity);
+            projectileInstance.Target = target;
         }
     }
 }
