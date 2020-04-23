@@ -15,11 +15,11 @@ namespace RPG.Combat
         private Mover _mover;
         private Health _target;
         private float _timeSinceLastAttack = Mathf.Infinity;
-        
-        [SerializeField] private Weapon defaultWeapon;
+
         [SerializeField] private Transform leftHandTransform;
         [SerializeField] private Transform rightHandTransform;
         [SerializeField] private float timeBetweenAttacks = 2f;
+        [SerializeField] private string defaultWeaponName = "Unarmed";
 
         public void Cancel()
         {
@@ -43,7 +43,8 @@ namespace RPG.Combat
 
         private void Start()
         {
-            EquipWeapon(defaultWeapon);
+            var weapon = Resources.Load<Weapon>(defaultWeaponName);
+            EquipWeapon(weapon);
         }
 
         public void EquipWeapon(Weapon weapon)
