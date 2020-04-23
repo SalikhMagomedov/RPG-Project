@@ -6,6 +6,8 @@ namespace RPG.Combat
     [CreateAssetMenu(fileName = "Weapon", menuName = "Weapons/Make New Weapon", order = 0)]
     public class Weapon : ScriptableObject
     {
+        private const string WeaponName = "Weapon";
+
         [SerializeField] private AnimatorOverrideController animatorOverride;
         [SerializeField] private float damage = 10f;
         [SerializeField] private bool isRightHanded = true;
@@ -19,9 +21,26 @@ namespace RPG.Combat
 
         public void Spawn(Transform rightHand, Transform leftHand, Animator animator)
         {
-            if (weaponPrefab != null) Instantiate(weaponPrefab, GetTransform(rightHand, leftHand));
+            DestroyOldWeapon(rightHand, leftHand);
+
+            if (weaponPrefab != null)
+            {
+                var weapon = Instantiate(weaponPrefab, GetTransform(rightHand, leftHand));
+                weapon.name = WeaponName;
+            }
 
             if (animatorOverride != null) animator.runtimeAnimatorController = animatorOverride;
+        }
+
+        private void DestroyOldWeapon(Transform rightHand, Transform leftHand)
+        {
+            var oldWeapon = rightHand.Find(WeaponName);
+            if (oldWeapon == null) oldWeapon = leftHand.Find(WeaponName);
+
+            if (oldWeapon == null) return;
+
+            oldWeapon.name = "DESTROYING";
+            Destroy(oldWeapon.gameObject);
         }
 
         private Transform GetTransform(Transform rightHand, Transform leftHand) => isRightHanded ? rightHand : leftHand;
