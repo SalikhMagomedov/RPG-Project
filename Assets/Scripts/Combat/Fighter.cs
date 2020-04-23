@@ -1,10 +1,11 @@
 ﻿using RPG.Core;
 using RPG.Movement;
+using RPG.Saving;
 using UnityEngine;
 
 namespace RPG.Combat
 {
-    public class Fighter : MonoBehaviour, IAction
+    public class Fighter : MonoBehaviour, IAction, ISaveable
     {
         private static readonly int AttackAnimation = Animator.StringToHash("Attack");
         private static readonly int StopAttackTrigger = Animator.StringToHash("StopAttack");
@@ -15,17 +16,25 @@ namespace RPG.Combat
         private Mover _mover;
         private Health _target;
         private float _timeSinceLastAttack = Mathf.Infinity;
-
+        
         [SerializeField] private Transform leftHandTransform;
         [SerializeField] private Transform rightHandTransform;
         [SerializeField] private float timeBetweenAttacks = 2f;
-        [SerializeField] private string defaultWeaponName = "Unarmed";
+        [SerializeField] private Weapon defaultWeapon;
 
         public void Cancel()
         {
             StopAttack();
             _target = null;
             _mover.Cancel();
+        }
+
+        public object CaptureState() => _currentWeapon.name;
+
+        public void RestoreState(object state)
+        {
+            var weapon = Resources.Load<Weapon>((string) state);
+            EquipWeapon(weapon);
         }
 
         private void StopAttack()
@@ -43,8 +52,9 @@ namespace RPG.Combat
 
         private void Start()
         {
-            var weapon = Resources.Load<Weapon>(defaultWeaponName);
-            EquipWeapon(weapon);
+            if (_currentWeapon != null) return;
+            
+            EquipWeapon(defaultWeapon);
         }
 
         public void EquipWeapon(Weapon weapon)
