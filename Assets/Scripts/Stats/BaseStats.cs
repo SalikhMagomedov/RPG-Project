@@ -8,5 +8,7 @@ namespace RPG.Stats
         [SerializeField] private int startingLevel = 1;
         [SerializeField] private CharacterClass characterClass = CharacterClass.Grunt;
         [SerializeField] private Progression progression;
+
+        public float Health => progression.GetHealth(characterClass, startingLevel);
     }
 }

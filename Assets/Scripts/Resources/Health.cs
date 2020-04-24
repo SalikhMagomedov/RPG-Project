@@ -1,15 +1,29 @@
-﻿using RPG.Saving;
+﻿using RPG.Core;
+using RPG.Saving;
+using RPG.Stats;
 using UnityEngine;
 
-namespace RPG.Core
+namespace RPG.Resources
 {
     public class Health : MonoBehaviour, ISaveable
     {
         private static readonly int DieTrigger = Animator.StringToHash("Die");
 
         [SerializeField] private float health = 100f;
+        
+        private BaseStats _baseStats;
 
         public bool IsDead { get; private set; }
+
+        private void Awake()
+        {
+            _baseStats = GetComponent<BaseStats>();
+        }
+
+        private void Start()
+        {
+            health = _baseStats.Health;
+        }
 
         public object CaptureState() => health;
 
