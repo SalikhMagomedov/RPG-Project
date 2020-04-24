@@ -11,13 +11,20 @@ namespace RPG.Stats
 
         public float GetHealth(CharacterClass characterClass, int level) => (from progressionClass in characterClasses
             where progressionClass.characterClass == characterClass
-            select progressionClass.health[level - 1]).FirstOrDefault();
+            select progressionClass.stats[0].levels[level - 1]).FirstOrDefault();
 
         [Serializable]
         private class ProgressionCharacterClass
         {
             public CharacterClass characterClass;
-            public float[] health;
+            public ProgressionStat[] stats;
+        }
+        
+        [Serializable]
+        private class ProgressionStat
+        {
+            public Stat stat;
+            public float[] levels;
         }
     }
 }
