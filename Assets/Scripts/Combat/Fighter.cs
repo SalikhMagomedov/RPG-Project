@@ -64,6 +64,8 @@ namespace RPG.Combat
             weapon.Spawn(rightHandTransform, leftHandTransform, _animator);
         }
 
+        public Health Target => _target;
+
         private void Update()
         {
             _timeSinceLastAttack += Time.deltaTime;
