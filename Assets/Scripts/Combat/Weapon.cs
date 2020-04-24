@@ -52,11 +52,11 @@ namespace RPG.Combat
 
         public bool HasProjectile() => projectile != null;
 
-        public void LaunchProjectile(Transform rightHand, Transform leftHand, Health target)
+        public void LaunchProjectile(Transform rightHand, Transform leftHand, Health target, GameObject instigator)
         {
             var projectileInstance =
                 Instantiate(projectile, GetTransform(rightHand, leftHand).position, Quaternion.identity);
-            projectileInstance.SetTarget(target, damage);
+            projectileInstance.SetTarget(target, instigator, damage);
         }
     }
 }

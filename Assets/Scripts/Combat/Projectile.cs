@@ -7,6 +7,7 @@ namespace RPG.Combat
     {
         private float _damage;
         private Health _target;
+        private GameObject _instigator;
         
         [SerializeField] private bool isHoming;
         [SerializeField] private float speed;
@@ -15,10 +16,11 @@ namespace RPG.Combat
         [SerializeField] private GameObject[] destroyOnHit;
         [SerializeField] private float lifeAfterImpact = 2;
 
-        public void SetTarget(Health value, float damage)
+        public void SetTarget(Health value, GameObject instigator, float damage)
         {
             _target = value;
             _damage = damage;
+            _instigator = instigator;
             
             Destroy(gameObject, maxLifetime);
         }
@@ -48,7 +50,7 @@ namespace RPG.Combat
             if (_target.IsDead) return;
 
             if (hitEffect != null) Instantiate(hitEffect, GetAimLocation(), transform.rotation);
-            _target.TakeDamage(_damage);
+            _target.TakeDamage(_instigator, _damage);
 
             speed = 0f;
 

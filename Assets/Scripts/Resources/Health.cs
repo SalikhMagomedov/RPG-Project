@@ -35,10 +35,21 @@ namespace RPG.Resources
             if (Mathf.Abs(health) < Mathf.Epsilon) Die();
         }
 
-        public void TakeDamage(float damage)
+        public void TakeDamage(GameObject instigator, float damage)
         {
             health = Mathf.Max(health - damage, 0);
-            if (Mathf.Abs(health) < Mathf.Epsilon) Die();
+            if (!(Mathf.Abs(health) < Mathf.Epsilon)) return;
+            
+            Die();
+            AwardExperience(instigator);
+        }
+
+        private void AwardExperience(GameObject instigator)
+        {
+            var experience = instigator.GetComponent<Experience>();
+            if (experience == null) return;
+
+            experience.GainExperience(_baseStats.ExperienceReward);
         }
 
         private void Die()

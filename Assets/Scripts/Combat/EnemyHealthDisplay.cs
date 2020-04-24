@@ -19,12 +19,11 @@ namespace RPG.Combat
             if (_fighter.Target == null)
             {
                 _text.text = "N/A";
+                return;
             }
-            else
-            {
-                var health = _fighter.Target;
-                _text.text = $"{health.Percentage:0.0}%";
-            }
+
+            var health = _fighter.Target;
+            _text.text = $"{health.Percentage:0.0}%";
         }
     }
 }

@@ -101,9 +101,9 @@ namespace RPG.Combat
             if (_target == null) return;
 
             if (_currentWeapon.HasProjectile())
-                _currentWeapon.LaunchProjectile(rightHandTransform, leftHandTransform, _target);
+                _currentWeapon.LaunchProjectile(rightHandTransform, leftHandTransform, _target, gameObject);
             else
-                _target.TakeDamage(_currentWeapon.Damage);
+                _target.TakeDamage(gameObject, _currentWeapon.Damage);
         }
 
         private void Shoot()
