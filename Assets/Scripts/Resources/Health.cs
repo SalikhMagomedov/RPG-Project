@@ -15,6 +15,8 @@ namespace RPG.Resources
 
         public bool IsDead { get; private set; }
 
+        public float Percentage => 100 * health / _baseStats.Health;
+
         private void Awake()
         {
             _baseStats = GetComponent<BaseStats>();
