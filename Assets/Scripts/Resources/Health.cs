@@ -15,7 +15,7 @@ namespace RPG.Resources
 
         public bool IsDead { get; private set; }
 
-        public float Percentage => 100 * health / _baseStats.Health;
+        public float Percentage => 100 * health / _baseStats.GetStat(Stat.Health);
 
         private void Awake()
         {
@@ -24,7 +24,7 @@ namespace RPG.Resources
 
         private void Start()
         {
-            health = _baseStats.Health;
+            health = _baseStats.GetStat(Stat.Health);
         }
 
         public object CaptureState() => health;
@@ -49,7 +49,7 @@ namespace RPG.Resources
             var experience = instigator.GetComponent<Experience>();
             if (experience == null) return;
 
-            experience.GainExperience(_baseStats.ExperienceReward);
+            experience.GainExperience(_baseStats.GetStat(Stat.ExperienceReward));
         }
 
         private void Die()
