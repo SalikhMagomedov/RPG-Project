@@ -4,7 +4,7 @@ namespace RPG.Stats
 {
     public class BaseStats : MonoBehaviour
     {
-        private int _currentLevel = 0;
+        private int _currentLevel;
 
         [Range(1, 99)]
         [SerializeField] private int startingLevel = 1;
@@ -13,20 +13,30 @@ namespace RPG.Stats
 
         private void Start()
         {
-            _currentLevel = Level;
+            _currentLevel = CalculateLevel();
+            var experience = GetComponent<Experience>();
+            if (experience != null)
+            {
+                experience.OnExperienceGained += () =>
+                {
+                    var newLevel = CalculateLevel();
+                    if (newLevel <= _currentLevel) return;
+                    _currentLevel = newLevel;
+                    print("Levelled Up!");
+                };
+            }
         }
 
-        private void Update()
+        public float GetStat(Stat stat) => progression.GetStat(stat, characterClass, GetLevel());
+
+        public int GetLevel()
         {
-            var newLevel = CalculateLevel();
-            if (newLevel <= _currentLevel) return;
-            _currentLevel = newLevel;
-            print("Levelled Up!");
+            if (_currentLevel < 1)
+            {
+                _currentLevel = CalculateLevel();
+            }
+            return _currentLevel;
         }
-
-        public float GetStat(Stat stat) => progression.GetStat(stat, characterClass, Level);
-
-        public int Level => _currentLevel;
 
         private int CalculateLevel()
         {
