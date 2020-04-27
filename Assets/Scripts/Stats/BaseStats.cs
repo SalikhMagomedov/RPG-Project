@@ -9,15 +9,6 @@ namespace RPG.Stats
         [SerializeField] private CharacterClass characterClass = CharacterClass.Grunt;
         [SerializeField] private Progression progression;
 
-        private void Update()
-        {
-            if (!gameObject.CompareTag("Player"))
-            {
-                return;
-            }
-            print(GetLevel());
-        }
-
         public float GetStat(Stat stat) => progression.GetStat(stat, characterClass, GetLevel());
 
         public int GetLevel()
