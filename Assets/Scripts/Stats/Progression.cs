@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace RPG.Stats
@@ -7,15 +7,39 @@ namespace RPG.Stats
     [CreateAssetMenu(fileName = "Progression", menuName = "Stats/New Progression", order = 0)]
     public class Progression : ScriptableObject
     {
+        private Dictionary<CharacterClass, Dictionary<Stat, float[]>> _lookupTable;
+        
         [SerializeField] private ProgressionCharacterClass[] characterClasses;
 
-        public float GetStat(Stat stat, CharacterClass characterClass, int level) =>
-            (from progressionClass in characterClasses
-                where progressionClass.characterClass == characterClass
-                from progressionStat in progressionClass.stats
-                where progressionStat.stat == stat
-                where progressionStat.levels.Length >= level
-                select progressionStat.levels[level - 1]).FirstOrDefault();
+        public float GetStat(Stat stat, CharacterClass characterClass, int level)
+        {
+            BuildLookup();
+            
+            var levels = _lookupTable[characterClass][stat];
+
+            if (levels.Length < level) return 0;
+
+            return levels[level - 1];
+        }
+
+        private void BuildLookup()
+        {
+            if (_lookupTable != null) return;
+
+            _lookupTable = new Dictionary<CharacterClass, Dictionary<Stat, float[]>>();
+            
+            foreach (var progressionCharacterClass in characterClasses)
+            {
+                var statLookupTable = new Dictionary<Stat, float[]>();
+
+                foreach (var progressionStat in progressionCharacterClass.stats)
+                {
+                    statLookupTable[progressionStat.stat] = progressionStat.levels;
+                }
+                
+                _lookupTable[progressionCharacterClass.characterClass] = statLookupTable;
+            }
+        }
 
         [Serializable]
         private class ProgressionCharacterClass
