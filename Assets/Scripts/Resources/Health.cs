@@ -9,13 +9,12 @@ namespace RPG.Resources
     {
         private static readonly int DieTrigger = Animator.StringToHash("Die");
 
-        [SerializeField] private float health = 100f;
-        
+        private float _health = -1f;
         private BaseStats _baseStats;
 
         public bool IsDead { get; private set; }
 
-        public float Percentage => 100 * health / _baseStats.GetStat(Stat.Health);
+        public float Percentage => 100 * _health / _baseStats.GetStat(Stat.Health);
 
         private void Awake()
         {
@@ -24,21 +23,24 @@ namespace RPG.Resources
 
         private void Start()
         {
-            health = _baseStats.GetStat(Stat.Health);
+            if (_health < 0)
+            {
+                _health = _baseStats.GetStat(Stat.Health);
+            }
         }
 
-        public object CaptureState() => health;
+        public object CaptureState() => _health;
 
         public void RestoreState(object state)
         {
-            health = (float) state;
-            if (Mathf.Abs(health) < Mathf.Epsilon) Die();
+            _health = (float) state;
+            if (Mathf.Abs(_health) < Mathf.Epsilon) Die();
         }
 
         public void TakeDamage(GameObject instigator, float damage)
         {
-            health = Mathf.Max(health - damage, 0);
-            if (!(Mathf.Abs(health) < Mathf.Epsilon)) return;
+            _health = Mathf.Max(_health - damage, 0);
+            if (!(Mathf.Abs(_health) < Mathf.Epsilon)) return;
             
             Die();
             AwardExperience(instigator);
