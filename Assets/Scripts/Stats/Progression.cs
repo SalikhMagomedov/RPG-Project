@@ -41,6 +41,12 @@ namespace RPG.Stats
             }
         }
 
+        public int GetLevels(Stat stat, CharacterClass characterClass)
+        {
+            var levels = _lookupTable[characterClass][stat];
+            return levels.Length;
+        }
+
         [Serializable]
         private class ProgressionCharacterClass
         {
