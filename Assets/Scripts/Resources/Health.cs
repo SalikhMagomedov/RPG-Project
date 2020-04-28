@@ -12,6 +12,8 @@ namespace RPG.Resources
         private float _health = -1f;
         private BaseStats _baseStats;
 
+        [SerializeField] private float regeneratePercentage = 70f;
+
         public bool IsDead { get; private set; }
 
         public float Percentage => 100 * _health / _baseStats.GetStat(Stat.Health);
@@ -23,10 +25,17 @@ namespace RPG.Resources
 
         private void Start()
         {
+            _baseStats.OnLevelUp += RegenerateHealth;
             if (_health < 0)
             {
                 _health = _baseStats.GetStat(Stat.Health);
             }
+        }
+
+        private void RegenerateHealth()
+        {
+            var regeneratePoints = _baseStats.GetStat(Stat.Health) * regeneratePercentage / 100;
+            _health = Mathf.Max(_health, regeneratePoints);
         }
 
         public object CaptureState() => _health;
