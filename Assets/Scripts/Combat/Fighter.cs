@@ -2,6 +2,7 @@
 using RPG.Movement;
 using RPG.Resources;
 using RPG.Saving;
+using RPG.Stats;
 using UnityEngine;
 
 namespace RPG.Combat
@@ -100,10 +101,13 @@ namespace RPG.Combat
         {
             if (_target == null) return;
 
+            var damage = GetComponent<BaseStats>().GetStat(Stat.Damage);
             if (_currentWeapon.HasProjectile())
-                _currentWeapon.LaunchProjectile(rightHandTransform, leftHandTransform, _target, gameObject);
+                _currentWeapon.LaunchProjectile(rightHandTransform, leftHandTransform, _target, gameObject, damage);
             else
-                _target.TakeDamage(gameObject, _currentWeapon.Damage);
+            {
+                _target.TakeDamage(gameObject, damage);
+            }
         }
 
         private void Shoot()

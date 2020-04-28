@@ -23,7 +23,7 @@ namespace RPG.Combat
             }
 
             var health = _fighter.Target;
-            _text.text = $"{health.Percentage:0.0}%";
+            _text.text = $"{health.CurrentHealth:0}/{health.MaxHealth:0}";
         }
     }
 }

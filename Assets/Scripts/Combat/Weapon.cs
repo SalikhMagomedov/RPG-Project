@@ -1,5 +1,4 @@
-﻿using RPG.Core;
-using RPG.Resources;
+﻿using RPG.Resources;
 using UnityEngine;
 
 namespace RPG.Combat
@@ -52,11 +51,11 @@ namespace RPG.Combat
 
         public bool HasProjectile() => projectile != null;
 
-        public void LaunchProjectile(Transform rightHand, Transform leftHand, Health target, GameObject instigator)
+        public void LaunchProjectile(Transform rightHand, Transform leftHand, Health target, GameObject instigator, float calculatedDamage)
         {
             var projectileInstance =
                 Instantiate(projectile, GetTransform(rightHand, leftHand).position, Quaternion.identity);
-            projectileInstance.SetTarget(target, instigator, damage);
+            projectileInstance.SetTarget(target, instigator, calculatedDamage);
         }
     }
 }

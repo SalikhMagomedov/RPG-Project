@@ -16,7 +16,7 @@ namespace RPG.Resources
 
         private void Update()
         {
-            _text.text = $"{_health.Percentage:0.0}%";
+            _text.text = $"{_health.CurrentHealth:0}/{_health.MaxHealth:0}";
         }
     }
 }

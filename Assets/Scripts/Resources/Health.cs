@@ -8,15 +8,25 @@ namespace RPG.Resources
     public class Health : MonoBehaviour, ISaveable
     {
         private static readonly int DieTrigger = Animator.StringToHash("Die");
-
-        private float _health = -1f;
         private BaseStats _baseStats;
 
         [SerializeField] private float regeneratePercentage = 70f;
 
         public bool IsDead { get; private set; }
 
-        public float Percentage => 100 * _health / _baseStats.GetStat(Stat.Health);
+        public float Percentage => 100 * CurrentHealth / _baseStats.GetStat(Stat.Health);
+
+        public float CurrentHealth { get; private set; } = -1f;
+
+        public float MaxHealth => _baseStats.GetStat(Stat.Health);
+
+        public object CaptureState() => CurrentHealth;
+
+        public void RestoreState(object state)
+        {
+            CurrentHealth = (float) state;
+            if (Mathf.Abs(CurrentHealth) < Mathf.Epsilon) Die();
+        }
 
         private void Awake()
         {
@@ -26,31 +36,20 @@ namespace RPG.Resources
         private void Start()
         {
             _baseStats.OnLevelUp += RegenerateHealth;
-            if (_health < 0)
-            {
-                _health = _baseStats.GetStat(Stat.Health);
-            }
+            if (CurrentHealth < 0) CurrentHealth = _baseStats.GetStat(Stat.Health);
         }
 
         private void RegenerateHealth()
         {
             var regeneratePoints = _baseStats.GetStat(Stat.Health) * regeneratePercentage / 100;
-            _health = Mathf.Max(_health, regeneratePoints);
-        }
-
-        public object CaptureState() => _health;
-
-        public void RestoreState(object state)
-        {
-            _health = (float) state;
-            if (Mathf.Abs(_health) < Mathf.Epsilon) Die();
+            CurrentHealth = Mathf.Max(CurrentHealth, regeneratePoints);
         }
 
         public void TakeDamage(GameObject instigator, float damage)
         {
-            _health = Mathf.Max(_health - damage, 0);
-            if (!(Mathf.Abs(_health) < Mathf.Epsilon)) return;
-            
+            CurrentHealth = Mathf.Max(CurrentHealth - damage, 0);
+            if (!(Mathf.Abs(CurrentHealth) < Mathf.Epsilon)) return;
+
             Die();
             AwardExperience(instigator);
         }
