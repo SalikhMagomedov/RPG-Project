@@ -1,4 +1,5 @@
-﻿using RPG.Core;
+﻿using System.Collections.Generic;
+using RPG.Core;
 using RPG.Movement;
 using RPG.Resources;
 using RPG.Saving;
@@ -7,7 +8,7 @@ using UnityEngine;
 
 namespace RPG.Combat
 {
-    public class Fighter : MonoBehaviour, IAction, ISaveable
+    public class Fighter : MonoBehaviour, IAction, ISaveable, IModifierProvider
     {
         private static readonly int AttackAnimation = Animator.StringToHash("Attack");
         private static readonly int StopAttackTrigger = Animator.StringToHash("StopAttack");
@@ -129,6 +130,14 @@ namespace RPG.Combat
         {
             _actionScheduler.StartAction(this);
             _target = target.GetComponent<Health>();
+        }
+
+        public IEnumerable<float> GetAdditiveModifier(Stat stat)
+        {
+            if (stat == Stat.Damage)
+            {
+                yield return _currentWeapon.Damage;
+            }
         }
     }
 }

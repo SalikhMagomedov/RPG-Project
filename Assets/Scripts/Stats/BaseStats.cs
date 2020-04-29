@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using UnityEngine;
 
 namespace RPG.Stats
@@ -37,7 +38,13 @@ namespace RPG.Stats
             Instantiate(levelUpParticleEffect, transform);
         }
 
-        public float GetStat(Stat stat) => progression.GetStat(stat, characterClass, GetLevel());
+        public float GetStat(Stat stat) =>
+            progression.GetStat(stat, characterClass, GetLevel()) + GetAdditiveModifiers(stat);
+
+        private float GetAdditiveModifiers(Stat stat) =>
+            GetComponents<IModifierProvider>()
+                .SelectMany(provider => provider.GetAdditiveModifier(stat))
+                .Sum();
 
         public int GetLevel()
         {
