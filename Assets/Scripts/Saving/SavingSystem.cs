@@ -14,12 +14,9 @@ namespace RPG.Saving
         public IEnumerator LoadLastScene(string saveFile)
         {
             var state = LoadFile(saveFile);
-            if (state.ContainsKey(SceneIndex))
-            {
-                var buildIndex = (int) state[SceneIndex];
-                if (buildIndex != SceneManager.GetActiveScene().buildIndex)
-                    yield return SceneManager.LoadSceneAsync(buildIndex);
-            }
+            var buildIndex = SceneManager.GetActiveScene().buildIndex;
+            if (state.ContainsKey(SceneIndex)) buildIndex = (int) state[SceneIndex];
+            yield return SceneManager.LoadSceneAsync(buildIndex);
 
             RestoreState(state);
         }

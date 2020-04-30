@@ -29,6 +29,7 @@ namespace RPG.Movement
             _agent.enabled = false;
             transform.position = ((SerializableVector3) state).ToVector3();
             _agent.enabled = true;
+            _actionScheduler.CancelCurrentAction();
         }
 
         private void Awake()
