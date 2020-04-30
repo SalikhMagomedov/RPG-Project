@@ -11,9 +11,12 @@ namespace RPG.Combat
         [SerializeField] private AnimatorOverrideController animatorOverride;
         [SerializeField] private float damage = 10f;
         [SerializeField] private bool isRightHanded = true;
+        [SerializeField] private float percentageBonus;
         [SerializeField] private Projectile projectile;
         [SerializeField] private float range = 2f;
         [SerializeField] private GameObject weaponPrefab;
+
+        public float PercentageBonus => percentageBonus;
 
         public float Damage => damage;
 
@@ -51,7 +54,8 @@ namespace RPG.Combat
 
         public bool HasProjectile() => projectile != null;
 
-        public void LaunchProjectile(Transform rightHand, Transform leftHand, Health target, GameObject instigator, float calculatedDamage)
+        public void LaunchProjectile(Transform rightHand, Transform leftHand, Health target, GameObject instigator,
+            float calculatedDamage)
         {
             var projectileInstance =
                 Instantiate(projectile, GetTransform(rightHand, leftHand).position, Quaternion.identity);

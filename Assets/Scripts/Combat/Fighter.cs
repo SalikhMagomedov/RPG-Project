@@ -17,19 +17,30 @@ namespace RPG.Combat
         private Animator _animator;
         private Weapon _currentWeapon;
         private Mover _mover;
-        private Health _target;
         private float _timeSinceLastAttack = Mathf.Infinity;
-        
+        [SerializeField] private Weapon defaultWeapon;
+
         [SerializeField] private Transform leftHandTransform;
         [SerializeField] private Transform rightHandTransform;
         [SerializeField] private float timeBetweenAttacks = 2f;
-        [SerializeField] private Weapon defaultWeapon;
+
+        public Health Target { get; private set; }
 
         public void Cancel()
         {
             StopAttack();
-            _target = null;
+            Target = null;
             _mover.Cancel();
+        }
+
+        public IEnumerable<float> GetAdditiveModifiers(Stat stat)
+        {
+            if (stat == Stat.Damage) yield return _currentWeapon.Damage;
+        }
+
+        public IEnumerable<float> GetPercentageModifiers(Stat stat)
+        {
+            if (stat == Stat.Damage) yield return _currentWeapon.PercentageBonus;
         }
 
         public object CaptureState() => _currentWeapon.name;
@@ -56,7 +67,7 @@ namespace RPG.Combat
         private void Start()
         {
             if (_currentWeapon != null) return;
-            
+
             EquipWeapon(defaultWeapon);
         }
 
@@ -66,16 +77,14 @@ namespace RPG.Combat
             weapon.Spawn(rightHandTransform, leftHandTransform, _animator);
         }
 
-        public Health Target => _target;
-
         private void Update()
         {
             _timeSinceLastAttack += Time.deltaTime;
-            if (_target == null) return;
-            if (_target.IsDead) return;
+            if (Target == null) return;
+            if (Target.IsDead) return;
             if (!IsInRange())
             {
-                _mover.MoveTo(_target.transform.position, 1f);
+                _mover.MoveTo(Target.transform.position, 1f);
             }
             else
             {
@@ -86,7 +95,7 @@ namespace RPG.Combat
 
         private void AttackBehaviour()
         {
-            transform.LookAt(_target.transform);
+            transform.LookAt(Target.transform);
             if (!(_timeSinceLastAttack > timeBetweenAttacks)) return;
             TriggerAttack();
             _timeSinceLastAttack = 0;
@@ -100,15 +109,13 @@ namespace RPG.Combat
 
         private void Hit()
         {
-            if (_target == null) return;
+            if (Target == null) return;
 
             var damage = GetComponent<BaseStats>().GetStat(Stat.Damage);
             if (_currentWeapon.HasProjectile())
-                _currentWeapon.LaunchProjectile(rightHandTransform, leftHandTransform, _target, gameObject, damage);
+                _currentWeapon.LaunchProjectile(rightHandTransform, leftHandTransform, Target, gameObject, damage);
             else
-            {
-                _target.TakeDamage(gameObject, damage);
-            }
+                Target.TakeDamage(gameObject, damage);
         }
 
         private void Shoot()
@@ -117,7 +124,7 @@ namespace RPG.Combat
         }
 
         private bool IsInRange() =>
-            Vector3.Distance(transform.position, _target.transform.position) < _currentWeapon.Range;
+            Vector3.Distance(transform.position, Target.transform.position) < _currentWeapon.Range;
 
         public bool CanAttack(GameObject combatTarget)
         {
@@ -129,15 +136,7 @@ namespace RPG.Combat
         public void Attack(GameObject target)
         {
             _actionScheduler.StartAction(this);
-            _target = target.GetComponent<Health>();
-        }
-
-        public IEnumerable<float> GetAdditiveModifier(Stat stat)
-        {
-            if (stat == Stat.Damage)
-            {
-                yield return _currentWeapon.Damage;
-            }
+            Target = target.GetComponent<Health>();
         }
     }
 }
