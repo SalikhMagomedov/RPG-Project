@@ -35,8 +35,17 @@ namespace RPG.Resources
 
         private void Start()
         {
-            _baseStats.OnLevelUp += RegenerateHealth;
             if (CurrentHealth < 0) CurrentHealth = _baseStats.GetStat(Stat.Health);
+        }
+
+        private void OnEnable()
+        {
+            _baseStats.OnLevelUp += RegenerateHealth;
+        }
+
+        private void OnDisable()
+        {   
+            _baseStats.OnLevelUp -= RegenerateHealth;
         }
 
         private void RegenerateHealth()

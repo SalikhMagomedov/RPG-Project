@@ -18,8 +18,8 @@ namespace RPG.Combat
         private Weapon _currentWeapon;
         private Mover _mover;
         private float _timeSinceLastAttack = Mathf.Infinity;
-        [SerializeField] private Weapon defaultWeapon;
 
+        [SerializeField] private Weapon defaultWeapon;
         [SerializeField] private Transform leftHandTransform;
         [SerializeField] private Transform rightHandTransform;
         [SerializeField] private float timeBetweenAttacks = 2f;

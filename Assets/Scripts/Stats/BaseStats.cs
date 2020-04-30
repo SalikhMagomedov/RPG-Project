@@ -7,6 +7,7 @@ namespace RPG.Stats
     public class BaseStats : MonoBehaviour
     {
         private int _currentLevel;
+        private Experience _experience;
 
         [SerializeField] private CharacterClass characterClass = CharacterClass.Grunt;
         [SerializeField] private GameObject levelUpParticleEffect;
@@ -16,19 +17,33 @@ namespace RPG.Stats
 
         public event Action OnLevelUp;
 
+        private void Awake()
+        {
+            _experience = GetComponent<Experience>();
+        }
+
         private void Start()
         {
             _currentLevel = CalculateLevel();
-            var experience = GetComponent<Experience>();
-            if (experience != null)
-                experience.OnExperienceGained += () =>
-                {
-                    var newLevel = CalculateLevel();
-                    if (newLevel <= _currentLevel) return;
-                    _currentLevel = newLevel;
-                    LevelUpEffect();
-                    OnLevelUp?.Invoke();
-                };
+        }
+
+        private void OnEnable()
+        {
+            if (_experience != null) _experience.OnExperienceGained += UpdateLevel;
+        }
+
+        private void OnDisable()
+        {
+            if (_experience != null) _experience.OnExperienceGained -= UpdateLevel;
+        }
+
+        private void UpdateLevel()
+        {
+            var newLevel = CalculateLevel();
+            if (newLevel <= _currentLevel) return;
+            _currentLevel = newLevel;
+            LevelUpEffect();
+            OnLevelUp?.Invoke();
         }
 
         private void LevelUpEffect()
@@ -63,11 +78,9 @@ namespace RPG.Stats
 
         private int CalculateLevel()
         {
-            var experience = GetComponent<Experience>();
+            if (_experience == null) return startingLevel;
 
-            if (experience == null) return startingLevel;
-
-            var currentXp = experience.Points;
+            var currentXp = _experience.Points;
 
             var penultimateLevel = progression.GetLevels(Stat.ExperienceToLevelUp, characterClass);
             for (var level = 1; level <= penultimateLevel; level++)
