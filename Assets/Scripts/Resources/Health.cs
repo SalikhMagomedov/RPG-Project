@@ -1,4 +1,5 @@
-﻿using RPG.Core;
+﻿using GameDevTV.Utils;
+using RPG.Core;
 using RPG.Saving;
 using RPG.Stats;
 using UnityEngine;
@@ -9,6 +10,7 @@ namespace RPG.Resources
     {
         private static readonly int DieTrigger = Animator.StringToHash("Die");
         private BaseStats _baseStats;
+        private LazyValue<float> _healthPoints;
 
         [SerializeField] private float regeneratePercentage = 70f;
 
@@ -16,7 +18,7 @@ namespace RPG.Resources
 
         public float Percentage => 100 * CurrentHealth / _baseStats.GetStat(Stat.Health);
 
-        public float CurrentHealth { get; private set; } = -1f;
+        public float CurrentHealth => _healthPoints.value;
 
         public float MaxHealth => _baseStats.GetStat(Stat.Health);
 
@@ -24,18 +26,20 @@ namespace RPG.Resources
 
         public void RestoreState(object state)
         {
-            CurrentHealth = (float) state;
+            _healthPoints.value = (float) state;
             if (Mathf.Abs(CurrentHealth) < Mathf.Epsilon) Die();
         }
 
         private void Awake()
         {
             _baseStats = GetComponent<BaseStats>();
+
+            _healthPoints = new LazyValue<float>(() => _baseStats.GetStat(Stat.Health));
         }
 
         private void Start()
         {
-            if (CurrentHealth < 0) CurrentHealth = _baseStats.GetStat(Stat.Health);
+            _healthPoints.ForceInit();
         }
 
         private void OnEnable()
@@ -44,19 +48,19 @@ namespace RPG.Resources
         }
 
         private void OnDisable()
-        {   
+        {
             _baseStats.OnLevelUp -= RegenerateHealth;
         }
 
         private void RegenerateHealth()
         {
             var regeneratePoints = _baseStats.GetStat(Stat.Health) * regeneratePercentage / 100;
-            CurrentHealth = Mathf.Max(CurrentHealth, regeneratePoints);
+            _healthPoints.value = Mathf.Max(CurrentHealth, regeneratePoints);
         }
 
         public void TakeDamage(GameObject instigator, float damage)
         {
-            CurrentHealth = Mathf.Max(CurrentHealth - damage, 0);
+            _healthPoints.value = Mathf.Max(CurrentHealth - damage, 0);
             if (!(Mathf.Abs(CurrentHealth) < Mathf.Epsilon)) return;
 
             Die();

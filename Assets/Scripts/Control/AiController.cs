@@ -1,4 +1,5 @@
-﻿using RPG.Combat;
+﻿using GameDevTV.Utils;
+using RPG.Combat;
 using RPG.Core;
 using RPG.Movement;
 using RPG.Resources;
@@ -11,7 +12,7 @@ namespace RPG.Control
         private ActionScheduler _actionScheduler;
         private int _currentWaypointIndex;
         private Fighter _fighter;
-        private Vector3 _guardPosition;
+        private LazyValue<Vector3> _guardPosition;
         private Health _health;
         private Mover _mover;
         private GameObject _player;
@@ -33,11 +34,13 @@ namespace RPG.Control
             _health = GetComponent<Health>();
             _fighter = GetComponent<Fighter>();
             _player = GameObject.FindWithTag("Player");
+            
+            _guardPosition = new LazyValue<Vector3>(() => transform.position);
         }
 
         private void Start()
         {
-            _guardPosition = transform.position;
+            _guardPosition.ForceInit();
         }
 
         private void Update()
@@ -68,7 +71,7 @@ namespace RPG.Control
 
         private void PatrolBehaviour()
         {
-            var nextPosition = _guardPosition;
+            var nextPosition = _guardPosition.value;
 
             if (patrolPath != null)
             {

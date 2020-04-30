@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Linq;
+using GameDevTV.Utils;
 using UnityEngine;
 
 namespace RPG.Stats
 {
     public class BaseStats : MonoBehaviour
     {
-        private int _currentLevel;
+        private LazyValue<int> _currentLevel;
         private Experience _experience;
 
         [SerializeField] private CharacterClass characterClass = CharacterClass.Grunt;
@@ -20,11 +21,13 @@ namespace RPG.Stats
         private void Awake()
         {
             _experience = GetComponent<Experience>();
+            
+            _currentLevel = new LazyValue<int>(CalculateLevel);
         }
 
         private void Start()
         {
-            _currentLevel = CalculateLevel();
+            _currentLevel.ForceInit();
         }
 
         private void OnEnable()
@@ -40,8 +43,8 @@ namespace RPG.Stats
         private void UpdateLevel()
         {
             var newLevel = CalculateLevel();
-            if (newLevel <= _currentLevel) return;
-            _currentLevel = newLevel;
+            if (newLevel <= _currentLevel.value) return;
+            _currentLevel.value = newLevel;
             LevelUpEffect();
             OnLevelUp?.Invoke();
         }
@@ -72,8 +75,7 @@ namespace RPG.Stats
 
         public int GetLevel()
         {
-            if (_currentLevel < 1) _currentLevel = CalculateLevel();
-            return _currentLevel;
+            return _currentLevel.value;
         }
 
         private int CalculateLevel()
