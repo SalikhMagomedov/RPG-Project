@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: Bow Red Projectile
   m_EditorClassIdentifier: 
   animatorOverride: {fileID: 22100000, guid: 3ff69f81741d34641ae461d8e1142d0c, type: 2}
-  damage: 10
+  damage: 0
   isRightHanded: 0
+  percentageBonus: 0
   projectile: {fileID: 2524125329048165365, guid: da08f2ed76a57bf48944bca473211fda,
     type: 3}
   range: 20
