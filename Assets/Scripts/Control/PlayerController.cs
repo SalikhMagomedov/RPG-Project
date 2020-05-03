@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using RPG.Movement;
 using RPG.Resources;
 using UnityEngine;
@@ -38,10 +39,7 @@ namespace RPG.Control
 
         private bool InteractWithComponent()
         {
-            var hits = new RaycastHit[5];
-            var size = Physics.RaycastNonAlloc(GetMouseRay(), hits);
-
-            if (size <= 0) return false;
+            var hits = RaycastAllSorted();
 
             foreach (var hit in hits)
             {
@@ -58,6 +56,19 @@ namespace RPG.Control
             }
 
             return false;
+        }
+
+        private IEnumerable<RaycastHit> RaycastAllSorted()
+        {
+            var hits = new RaycastHit[5];
+            Physics.RaycastNonAlloc(GetMouseRay(), hits);
+            var distances = new float[hits.Length];
+            for (var i = 0; i < hits.Length; i++)
+            {
+                distances[i] = hits[i].distance;
+            }
+            Array.Sort(distances, hits);
+            return hits;
         }
 
         private bool InteractWithUi()
