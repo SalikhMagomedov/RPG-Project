@@ -1,5 +1,5 @@
 ﻿using System;
-using RPG.Combat;
+using System.Linq;
 using RPG.Movement;
 using RPG.Resources;
 using UnityEngine;
@@ -10,7 +10,6 @@ namespace RPG.Control
     public class PlayerController : MonoBehaviour
     {
         private Camera _camera;
-        private Fighter _fighter;
         private Health _health;
         private Mover _mover;
 
@@ -19,7 +18,6 @@ namespace RPG.Control
         private void Awake()
         {
             _health = GetComponent<Health>();
-            _fighter = GetComponent<Fighter>();
             _mover = GetComponent<Mover>();
             _camera = Camera.main;
         }
@@ -33,10 +31,24 @@ namespace RPG.Control
                 return;
             }
 
-            if (InteractWithCombat()) return;
+            if (InteractWithComponent()) return;
             if (InteractWithMovement()) return;
 
             SetCursor(CursorType.None);
+        }
+
+        private bool InteractWithComponent()
+        {
+            var hits = new RaycastHit[5];
+            var size = Physics.RaycastNonAlloc(GetMouseRay(), hits);
+
+            if (size <= 0) return false;
+
+            if (!hits.Where(hit => hit.transform != null).SelectMany(hit => hit.transform.GetComponents<IRaycastable>())
+                .Any(component => component.HandleRaycast(this))) return false;
+            SetCursor(CursorType.Combat);
+            return true;
+
         }
 
         private bool InteractWithUi()
@@ -45,32 +57,6 @@ namespace RPG.Control
             
             SetCursor(CursorType.Ui);
             return true;
-        }
-
-        private bool InteractWithCombat()
-        {
-            var hits = new RaycastHit[5];
-            var size = Physics.RaycastNonAlloc(GetMouseRay(), hits);
-
-            if (size <= 0) return false;
-
-            foreach (var hit in hits)
-            {
-                if (hit.transform == null) continue;
-
-                var target = hit.transform.GetComponent<CombatTarget>();
-                if (target == null) continue;
-
-                if (!_fighter.CanAttack(target.gameObject)) continue;
-
-                if (Input.GetMouseButton(0)) _fighter.Attack(target.gameObject);
-
-                SetCursor(CursorType.Combat);
-
-                return true;
-            }
-
-            return false;
         }
 
         private void SetCursor(CursorType cursor)
