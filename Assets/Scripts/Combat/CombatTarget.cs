@@ -10,11 +10,13 @@ namespace RPG.Combat
         public bool HandleRaycast(PlayerController controller)
         {
             var fighter = controller.GetComponent<Fighter>();
-            if (!fighter.CanAttack(this.gameObject)) return false;
+            if (!fighter.CanAttack(gameObject)) return false;
 
-            if (Input.GetMouseButton(0)) fighter.Attack(this.gameObject);
+            if (Input.GetMouseButton(0)) fighter.Attack(gameObject);
 
             return true;
         }
+
+        public CursorType CursorType => CursorType.Combat;
     }
 }

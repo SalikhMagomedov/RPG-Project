@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using RPG.Movement;
 using RPG.Resources;
 using UnityEngine;
@@ -24,7 +23,7 @@ namespace RPG.Control
 
         private void Update()
         {
-            if(InteractWithUi()) return;
+            if (InteractWithUi()) return;
             if (_health.IsDead)
             {
                 SetCursor(CursorType.None);
@@ -44,17 +43,27 @@ namespace RPG.Control
 
             if (size <= 0) return false;
 
-            if (!hits.Where(hit => hit.transform != null).SelectMany(hit => hit.transform.GetComponents<IRaycastable>())
-                .Any(component => component.HandleRaycast(this))) return false;
-            SetCursor(CursorType.Combat);
-            return true;
+            foreach (var hit in hits)
+            {
+                if (hit.transform == null) continue;
+                
+                var raycastables = hit.transform.GetComponents<IRaycastable>();
+                foreach (var raycastable in raycastables)
+                {
+                    if (!raycastable.HandleRaycast(this)) continue;
+                    
+                    SetCursor(raycastable.CursorType);
+                    return true;
+                }
+            }
 
+            return false;
         }
 
         private bool InteractWithUi()
         {
             if (!EventSystem.current.IsPointerOverGameObject()) return false;
-            
+
             SetCursor(CursorType.Ui);
             return true;
         }
@@ -86,14 +95,6 @@ namespace RPG.Control
         }
 
         private Ray GetMouseRay() => _camera.ScreenPointToRay(Input.mousePosition);
-
-        private enum CursorType
-        {
-            None,
-            Movement,
-            Combat,
-            Ui
-        }
 
         [Serializable]
         private struct CursorMapping
