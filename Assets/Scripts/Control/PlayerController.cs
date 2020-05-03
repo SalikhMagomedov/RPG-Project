@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using RPG.Movement;
 using RPG.Resources;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.EventSystems;
 
 namespace RPG.Control
@@ -14,6 +15,7 @@ namespace RPG.Control
         private Mover _mover;
 
         [SerializeField] private CursorMapping[] cursorMappings;
+        [SerializeField] private float maxNavMeshProjectionDistance = 1f;
 
         private void Awake()
         {
@@ -96,12 +98,29 @@ namespace RPG.Control
 
         private bool InteractWithMovement()
         {
-            var hasHit = Physics.Raycast(GetMouseRay(), out var hit);
+            var hasHit = RaycastNavMesh(out var target);
             if (!hasHit) return false;
-            if (Input.GetMouseButton(0)) _mover.StartMoveAction(hit.point, 1f);
+            if (Input.GetMouseButton(0)) _mover.StartMoveAction(target, 1f);
 
             SetCursor(CursorType.Movement);
 
+            return true;
+        }
+
+        private bool RaycastNavMesh(out Vector3 target)
+        {
+            target = new Vector3();
+            var hasHit = Physics.Raycast(GetMouseRay(), out var hit);
+            
+            if (!hasHit) return false;
+
+            var hasCastToNavMesh = NavMesh.SamplePosition(hit.point,
+                out var navMeshHit,
+                maxNavMeshProjectionDistance,
+                NavMesh.AllAreas);
+            if (!hasCastToNavMesh) return false;
+
+            target = navMeshHit.position;
             return true;
         }
 
