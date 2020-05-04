@@ -1,4 +1,5 @@
-﻿using GameDevTV.Utils;
+﻿using System;
+using GameDevTV.Utils;
 using RPG.Core;
 using RPG.Saving;
 using RPG.Stats;
@@ -14,7 +15,7 @@ namespace RPG.Resources
         private LazyValue<float> _healthPoints;
 
         [SerializeField] private float regeneratePercentage = 70f;
-        [SerializeField] private UnityEvent takeDamage;
+        [SerializeField] private TakeDamageEvent takeDamage;
 
         public bool IsDead { get; private set; }
 
@@ -71,7 +72,7 @@ namespace RPG.Resources
             }
             else
             {
-                takeDamage.Invoke();
+                takeDamage.Invoke(damage);
             }
         }
 
@@ -90,6 +91,11 @@ namespace RPG.Resources
             IsDead = true;
             GetComponent<Animator>().SetTrigger(DieTrigger);
             GetComponent<ActionScheduler>().CancelCurrentAction();
+        }
+
+        [Serializable]
+        private class TakeDamageEvent : UnityEvent<float>
+        {
         }
     }
 }

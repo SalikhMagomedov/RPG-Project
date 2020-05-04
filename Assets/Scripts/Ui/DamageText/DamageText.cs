@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace RPG.Ui.DamageText
@@ -15,7 +14,7 @@ namespace RPG.Ui.DamageText
 
         public void SetValue(float amount)
         {
-            damageText.text = amount.ToString(CultureInfo.InvariantCulture);
+            damageText.text = $"{amount:0}";
         }
     }
 }
