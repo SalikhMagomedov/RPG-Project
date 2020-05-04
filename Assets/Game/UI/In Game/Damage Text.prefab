@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8343703888771167436}
   - component: {fileID: 114581078606078816}
+  - component: {fileID: 155576852924221954}
   m_Layer: 0
   m_Name: Damage Text
   m_TagString: Untagged
@@ -44,6 +45,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 720b3279878f4179bdddb0e89cce476e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!111 &155576852924221954
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 783963953201856690}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 44e1bf67b580252479f4045cebc99444, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 44e1bf67b580252479f4045cebc99444, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &3486424099400236161
 GameObject:
   m_ObjectHideFlags: 0
@@ -57,7 +74,6 @@ GameObject:
   - component: {fileID: 4647353218831002576}
   - component: {fileID: 7863992174816601072}
   - component: {fileID: 8437286518489745467}
-  - component: {fileID: 3204766584683986391}
   - component: {fileID: 609384422913881735}
   m_Layer: 5
   m_Name: Damage Text
@@ -158,22 +174,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a9a0fc8301a407cb0c94563115f3fb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!111 &3204766584683986391
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3486424099400236161}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: 44e1bf67b580252479f4045cebc99444, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: 44e1bf67b580252479f4045cebc99444, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!225 &609384422913881735
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -213,14 +213,14 @@ RectTransform:
   m_GameObject: {fileID: 3712111162810687052}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_Children: []
   m_Father: {fileID: 6500275166419013854}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0.75}
   m_SizeDelta: {x: 1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8950240829091668201
