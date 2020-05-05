@@ -5,6 +5,7 @@ namespace RPG.SceneManagement
 {
     public class Fader : MonoBehaviour
     {
+        private Coroutine _activeFade;
         private CanvasGroup _canvasGroup;
 
         private void Awake()
@@ -12,22 +13,31 @@ namespace RPG.SceneManagement
             _canvasGroup = GetComponent<CanvasGroup>();
         }
 
-        public IEnumerator FadeOut(float time)
+        private IEnumerator Fade(float target, float time)
         {
-            while (_canvasGroup.alpha < 1)
+            if (_activeFade != null) StopCoroutine(_activeFade);
+
+            _activeFade = StartCoroutine(FadeRoutine(target, time));
+            yield return _activeFade;
+        }
+
+        private IEnumerator FadeRoutine(float target, float time)
+        {
+            while (!Mathf.Approximately(_canvasGroup.alpha, target))
             {
-                _canvasGroup.alpha += Time.deltaTime / time;
+                _canvasGroup.alpha = Mathf.MoveTowards(_canvasGroup.alpha, target, Time.deltaTime / time);
                 yield return null;
             }
         }
 
         public IEnumerator FadeIn(float time)
         {
-            while (_canvasGroup.alpha > 0)
-            {
-                _canvasGroup.alpha -= Time.deltaTime / time;
-                yield return null;
-            }
+            return Fade(0, time);
+        }
+
+        public IEnumerator FadeOut(float time)
+        {
+           return Fade(1, time);
         }
 
         public void FadeOutImmediate()
