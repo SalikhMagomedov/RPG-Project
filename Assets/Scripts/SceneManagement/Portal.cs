@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using System.Linq;
-using RPG.Saving;
+using RPG.Control;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
@@ -16,13 +16,6 @@ namespace RPG.SceneManagement
         [SerializeField] private int sceneToLoad = -1;
         [SerializeField] private Transform spawnPoint;
 
-        private void OnTriggerEnter(Collider other)
-        {
-            if (!other.CompareTag("Player")) return;
-
-            StartCoroutine(Transition());
-        }
-
         private IEnumerator Transition()
         {
             if (sceneToLoad < 0)
@@ -32,15 +25,20 @@ namespace RPG.SceneManagement
             }
 
             DontDestroyOnLoad(gameObject);
-
+            
             var fader = FindObjectOfType<Fader>();
+            var wrapper = FindObjectOfType<SavingWrapper>();
+            var playerController = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
+            playerController.enabled = false;
 
             yield return fader.FadeOut(fadeOutTime);
-
-            var wrapper = FindObjectOfType<SavingWrapper>();
-            wrapper.Save();
             
+            wrapper.Save();
+
             yield return SceneManager.LoadSceneAsync(sceneToLoad);
+
+            var newPlayerController = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
+            newPlayerController.enabled = false;
 
             wrapper.Load();
             
@@ -48,11 +46,19 @@ namespace RPG.SceneManagement
             UpdatePlayer(otherPortal);
 
             yield return new WaitForSeconds(fadeWaitTime);
-            yield return fader.FadeIn(fadeInTime);
+            fader.FadeIn(fadeInTime);
             
             wrapper.Save();
 
+            newPlayerController.enabled = true;
             Destroy(gameObject);
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (!other.CompareTag("Player")) return;
+
+            StartCoroutine(Transition());
         }
 
         private void UpdatePlayer(Portal otherPortal)
