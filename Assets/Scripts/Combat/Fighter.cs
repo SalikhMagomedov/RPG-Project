@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using GameDevTV.Utils;
+using RPG.Attributes;
 using RPG.Core;
 using RPG.Movement;
-using RPG.Resources;
 using RPG.Saving;
 using RPG.Stats;
 using UnityEngine;

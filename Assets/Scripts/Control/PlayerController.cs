@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using RPG.Attributes;
 using RPG.Movement;
-using RPG.Resources;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
