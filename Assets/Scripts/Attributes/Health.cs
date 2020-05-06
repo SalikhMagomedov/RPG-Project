@@ -101,5 +101,10 @@ namespace RPG.Attributes
         private class TakeDamageEvent : UnityEvent<float>
         {
         }
+
+        public void Heal(float healthToRestore)
+        {
+            _healthPoints.value = Mathf.Min(CurrentHealth + healthToRestore, MaxHealth);
+        }
     }
 }
