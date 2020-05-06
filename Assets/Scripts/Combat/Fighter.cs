@@ -16,7 +16,8 @@ namespace RPG.Combat
 
         private ActionScheduler _actionScheduler;
         private Animator _animator;
-        private LazyValue<WeaponConfig> _currentWeapon;
+        private WeaponConfig _currentWeaponConfig;
+        private LazyValue<Weapon> _currentWeapon;
         private Mover _mover;
         private float _timeSinceLastAttack = Mathf.Infinity;
 
@@ -36,19 +37,19 @@ namespace RPG.Combat
 
         public IEnumerable<float> GetAdditiveModifiers(Stat stat)
         {
-            if (stat == Stat.Damage) yield return _currentWeapon.value.Damage;
+            if (stat == Stat.Damage) yield return _currentWeaponConfig.Damage;
         }
 
         public IEnumerable<float> GetPercentageModifiers(Stat stat)
         {
-            if (stat == Stat.Damage) yield return _currentWeapon.value.PercentageBonus;
+            if (stat == Stat.Damage) yield return _currentWeaponConfig.PercentageBonus;
         }
 
-        public object CaptureState() => _currentWeapon.value.name;
+        public object CaptureState() => _currentWeaponConfig.name;
 
         public void RestoreState(object state)
         {
-            var weapon = UnityEngine.Resources.Load<WeaponConfig>((string) state);
+            var weapon = Resources.Load<WeaponConfig>((string) state);
             EquipWeapon(weapon);
         }
 
@@ -63,12 +64,9 @@ namespace RPG.Combat
             _animator = GetComponent<Animator>();
             _actionScheduler = GetComponent<ActionScheduler>();
             _mover = GetComponent<Mover>();
-            
-            _currentWeapon = new LazyValue<WeaponConfig>(() =>
-            {
-                defaultWeaponConfig.Spawn(rightHandTransform, leftHandTransform, _animator);
-                return defaultWeaponConfig;
-            });
+
+            _currentWeaponConfig = defaultWeaponConfig;
+            _currentWeapon = new LazyValue<Weapon>(() => AttachWeapon(_currentWeaponConfig));
         }
 
         private void Start()
@@ -76,10 +74,15 @@ namespace RPG.Combat
             _currentWeapon.ForceInit();
         }
 
+        private Weapon AttachWeapon(WeaponConfig weaponConfig)
+        {
+            return weaponConfig.Spawn(rightHandTransform, leftHandTransform, _animator);
+        }
+
         public void EquipWeapon(WeaponConfig weaponConfig)
         {
-            _currentWeapon.value = weaponConfig;
-            weaponConfig.Spawn(rightHandTransform, leftHandTransform, _animator);
+            _currentWeaponConfig = weaponConfig;
+            _currentWeapon.value = AttachWeapon(_currentWeaponConfig);
         }
 
         private void Update()
@@ -117,8 +120,14 @@ namespace RPG.Combat
             if (Target == null) return;
 
             var damage = GetComponent<BaseStats>().GetStat(Stat.Damage);
-            if (_currentWeapon.value.HasProjectile())
-                _currentWeapon.value.LaunchProjectile(rightHandTransform, leftHandTransform, Target, gameObject, damage);
+
+            if (_currentWeapon.value != null)
+            {
+                _currentWeapon.value.OnHit();
+            }
+            
+            if (_currentWeaponConfig.HasProjectile())
+                _currentWeaponConfig.LaunchProjectile(rightHandTransform, leftHandTransform, Target, gameObject, damage);
             else
                 Target.TakeDamage(gameObject, damage);
         }
@@ -129,7 +138,7 @@ namespace RPG.Combat
         }
 
         private bool IsInRange() =>
-            Vector3.Distance(transform.position, Target.transform.position) < _currentWeapon.value.Range;
+            Vector3.Distance(transform.position, Target.transform.position) < _currentWeaponConfig.Range;
 
         public bool CanAttack(GameObject combatTarget)
         {
