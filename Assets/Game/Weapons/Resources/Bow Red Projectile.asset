@@ -19,5 +19,5 @@ MonoBehaviour:
   projectile: {fileID: 2524125329048165365, guid: da08f2ed76a57bf48944bca473211fda,
     type: 3}
   range: 20
-  weaponPrefab: {fileID: 7483056740106902677, guid: 3ca29fe70690919478935ad5d5425992,
+  weaponPrefab: {fileID: 114483946665184686, guid: 3ca29fe70690919478935ad5d5425992,
     type: 3}

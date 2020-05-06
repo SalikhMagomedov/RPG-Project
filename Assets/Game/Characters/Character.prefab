@@ -107,7 +107,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9c28565675247c5922b28f9f0538386, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultWeapon: {fileID: 11400000, guid: 56ac62d6d4971e742b36f8c65651edd8, type: 2}
+  defaultWeaponConfig: {fileID: 11400000, guid: 56ac62d6d4971e742b36f8c65651edd8,
+    type: 2}
   leftHandTransform: {fileID: 0}
   rightHandTransform: {fileID: 0}
   timeBetweenAttacks: 2

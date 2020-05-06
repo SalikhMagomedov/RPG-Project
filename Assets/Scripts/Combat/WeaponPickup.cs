@@ -7,7 +7,7 @@ namespace RPG.Combat
     public class WeaponPickup : MonoBehaviour, IRaycastable
     {
         [SerializeField] private float respawnTime = 5f;
-        [SerializeField] private Weapon weapon;
+        [SerializeField] private WeaponConfig weaponConfig;
 
         public bool HandleRaycast(PlayerController controller)
         {
@@ -27,7 +27,7 @@ namespace RPG.Combat
 
         private void Pickup(Fighter fighter)
         {
-            fighter.EquipWeapon(weapon);
+            fighter.EquipWeapon(weaponConfig);
             StartCoroutine(HideForSeconds(respawnTime));
         }
 

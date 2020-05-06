@@ -72,6 +72,12 @@ PrefabInstance:
       propertyPath: leftHandTransform
       value: 
       objectReference: {fileID: 8754377377120234119}
+    - target: {fileID: 114255040322663476, guid: 4d61b1138b43db54cb719b7d57c7c49a,
+        type: 3}
+      propertyPath: defaultWeaponConfig
+      value: 
+      objectReference: {fileID: 11400000, guid: 0bdb3eb15b38a9740a4b965bcfa25511,
+        type: 2}
     - target: {fileID: 1031595387290998320, guid: 4d61b1138b43db54cb719b7d57c7c49a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -135,7 +141,7 @@ PrefabInstance:
     - target: {fileID: 1791002818456444854, guid: 4d61b1138b43db54cb719b7d57c7c49a,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4604138643168904430, guid: 4d61b1138b43db54cb719b7d57c7c49a,
         type: 3}

@@ -57,4 +57,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe36e43920c74a81b5c97d274312fc95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weapon: {fileID: 11400000, guid: 56ac62d6d4971e742b36f8c65651edd8, type: 2}
+  respawnTime: 5
+  weaponConfig: {fileID: 11400000, guid: 56ac62d6d4971e742b36f8c65651edd8, type: 2}

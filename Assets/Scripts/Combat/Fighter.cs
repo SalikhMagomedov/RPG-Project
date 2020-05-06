@@ -16,11 +16,11 @@ namespace RPG.Combat
 
         private ActionScheduler _actionScheduler;
         private Animator _animator;
-        private LazyValue<Weapon> _currentWeapon;
+        private LazyValue<WeaponConfig> _currentWeapon;
         private Mover _mover;
         private float _timeSinceLastAttack = Mathf.Infinity;
 
-        [SerializeField] private Weapon defaultWeapon;
+        [SerializeField] private WeaponConfig defaultWeaponConfig;
         [SerializeField] private Transform leftHandTransform;
         [SerializeField] private Transform rightHandTransform;
         [SerializeField] private float timeBetweenAttacks = 2f;
@@ -48,7 +48,7 @@ namespace RPG.Combat
 
         public void RestoreState(object state)
         {
-            var weapon = UnityEngine.Resources.Load<Weapon>((string) state);
+            var weapon = UnityEngine.Resources.Load<WeaponConfig>((string) state);
             EquipWeapon(weapon);
         }
 
@@ -64,10 +64,10 @@ namespace RPG.Combat
             _actionScheduler = GetComponent<ActionScheduler>();
             _mover = GetComponent<Mover>();
             
-            _currentWeapon = new LazyValue<Weapon>(() =>
+            _currentWeapon = new LazyValue<WeaponConfig>(() =>
             {
-                defaultWeapon.Spawn(rightHandTransform, leftHandTransform, _animator);
-                return defaultWeapon;
+                defaultWeaponConfig.Spawn(rightHandTransform, leftHandTransform, _animator);
+                return defaultWeaponConfig;
             });
         }
 
@@ -76,10 +76,10 @@ namespace RPG.Combat
             _currentWeapon.ForceInit();
         }
 
-        public void EquipWeapon(Weapon weapon)
+        public void EquipWeapon(WeaponConfig weaponConfig)
         {
-            _currentWeapon.value = weapon;
-            weapon.Spawn(rightHandTransform, leftHandTransform, _animator);
+            _currentWeapon.value = weaponConfig;
+            weaponConfig.Spawn(rightHandTransform, leftHandTransform, _animator);
         }
 
         private void Update()
