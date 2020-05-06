@@ -18,4 +18,5 @@ MonoBehaviour:
   percentageBonus: 0
   projectile: {fileID: 0}
   range: 2
-  weaponPrefab: {fileID: 0}
+  weaponPrefab: {fileID: 114395747939711054, guid: f5f3e5a280b90ea48a7b13b2d080d4f7,
+    type: 3}
