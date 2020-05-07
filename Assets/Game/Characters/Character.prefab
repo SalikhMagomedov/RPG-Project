@@ -111,7 +111,7 @@ MonoBehaviour:
     type: 2}
   leftHandTransform: {fileID: 0}
   rightHandTransform: {fileID: 0}
-  timeBetweenAttacks: 2
+  timeBetweenAttacks: 1
 --- !u!114 &114611392549944930
 MonoBehaviour:
   m_ObjectHideFlags: 0
