@@ -16,6 +16,7 @@ namespace RPG.Movement
         private Health _health;
 
         [SerializeField] private float maxSpeed = 6f;
+        [SerializeField] private float maxNavPathLength = 40f;
 
         public void Cancel()
         {
@@ -54,6 +55,20 @@ namespace RPG.Movement
 
             _animator.SetFloat(Property, speed);
         }
+        
+        private float GetPathLength(NavMeshPath path)
+        {
+            var total = 0f;
+
+            if (path.corners.Length < 2) return total;
+
+            for (var i = 0; i < path.corners.Length - 1; i++)
+            {
+                total += Vector3.Distance(path.corners[i], path.corners[i + 1]);
+            }
+            
+            return total;
+        }
 
         public void MoveTo(Vector3 destination, float speedFraction)
         {
@@ -66,6 +81,15 @@ namespace RPG.Movement
         {
             _actionScheduler.StartAction(this);
             MoveTo(destination, speedFraction);
+        }
+
+        public bool CanMoveTo(Vector3 destination)
+        {
+            var path = new NavMeshPath();
+            var hasPath = NavMesh.CalculatePath(transform.position, destination, NavMesh.AllAreas, path);
+            if (!hasPath) return false;
+            if (path.status != NavMeshPathStatus.PathComplete) return false;
+            return !(GetPathLength(path) > maxNavPathLength);
         }
     }
 }
