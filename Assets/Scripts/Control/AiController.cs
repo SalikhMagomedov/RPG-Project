@@ -18,11 +18,13 @@ namespace RPG.Control
         private GameObject _player;
         private float _timeSinceArrivedWaypoint = Mathf.Infinity;
         private float _timeSinceLastSawPlayer = Mathf.Infinity;
+        private float _timeSinceAggrevated = Mathf.Infinity;
 
         [SerializeField] private float chaseDistance = 5f;
         [SerializeField] private float dwellTime = 3f;
         [SerializeField] private PatrolPath patrolPath;
         [SerializeField] private float suspicionTime = 5f;
+        [SerializeField] private float aggroCooldownTime = 5f;
         [SerializeField] private float waypointTolerance = 1f;
         [Range(0, 1)]
         [SerializeField] private float patrolSpeedFraction = .2f;
@@ -46,7 +48,7 @@ namespace RPG.Control
         private void Update()
         {
             if (_health.IsDead) return;
-            if (InAttackRangeOfPlayer() && _fighter.CanAttack(_player))
+            if (IsAggrevated() && _fighter.CanAttack(_player))
             {
                 _timeSinceLastSawPlayer = 0;
                 AttackBehaviour();
@@ -63,10 +65,17 @@ namespace RPG.Control
             UpdateTimers();
         }
 
+        public void Aggrevate()
+        {
+            _timeSinceAggrevated = 0;
+        }
+
         private void UpdateTimers()
         {
-            _timeSinceLastSawPlayer += Time.deltaTime;
-            _timeSinceArrivedWaypoint += Time.deltaTime;
+            var deltaTime = Time.deltaTime;
+            _timeSinceLastSawPlayer += deltaTime;
+            _timeSinceArrivedWaypoint += deltaTime;
+            _timeSinceAggrevated += deltaTime;
         }
 
         private void PatrolBehaviour()
@@ -110,10 +119,10 @@ namespace RPG.Control
             _fighter.Attack(_player);
         }
 
-        private bool InAttackRangeOfPlayer()
+        private bool IsAggrevated()
         {
             var distanceToPlayer = Vector3.Distance(_player.transform.position, transform.position);
-            return distanceToPlayer <= chaseDistance;
+            return distanceToPlayer <= chaseDistance || _timeSinceAggrevated < aggroCooldownTime;
         }
 
         private void OnDrawGizmosSelected()
