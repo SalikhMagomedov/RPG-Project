@@ -16,18 +16,18 @@ namespace RPG.Control
         private Health _health;
         private Mover _mover;
         private GameObject _player;
+        private float _timeSinceAggrevated = Mathf.Infinity;
         private float _timeSinceArrivedWaypoint = Mathf.Infinity;
         private float _timeSinceLastSawPlayer = Mathf.Infinity;
-        private float _timeSinceAggrevated = Mathf.Infinity;
 
+        [SerializeField] private float aggroCooldownTime = 5f;
         [SerializeField] private float chaseDistance = 5f;
         [SerializeField] private float dwellTime = 3f;
         [SerializeField] private PatrolPath patrolPath;
+        [Range(0, 1)] [SerializeField] private float patrolSpeedFraction = .2f;
+        [SerializeField] private float shoutDistance;
         [SerializeField] private float suspicionTime = 5f;
-        [SerializeField] private float aggroCooldownTime = 5f;
         [SerializeField] private float waypointTolerance = 1f;
-        [Range(0, 1)]
-        [SerializeField] private float patrolSpeedFraction = .2f;
 
         private void Awake()
         {
@@ -36,7 +36,7 @@ namespace RPG.Control
             _health = GetComponent<Health>();
             _fighter = GetComponent<Fighter>();
             _player = GameObject.FindWithTag("Player");
-            
+
             _guardPosition = new LazyValue<Vector3>(() => transform.position);
         }
 
@@ -49,18 +49,11 @@ namespace RPG.Control
         {
             if (_health.IsDead) return;
             if (IsAggrevated() && _fighter.CanAttack(_player))
-            {
-                _timeSinceLastSawPlayer = 0;
                 AttackBehaviour();
-            }
             else if (_timeSinceLastSawPlayer < suspicionTime)
-            {
                 SuspicionBehaviour();
-            }
             else
-            {
                 PatrolBehaviour();
-            }
 
             UpdateTimers();
         }
@@ -116,7 +109,22 @@ namespace RPG.Control
 
         private void AttackBehaviour()
         {
+            _timeSinceLastSawPlayer = 0;
             _fighter.Attack(_player);
+
+            AggrevateNearbyEnemies();
+        }
+
+        private void AggrevateNearbyEnemies()
+        {
+            var hits = Physics.SphereCastAll(transform.position, shoutDistance, Vector3.up, 0);
+            foreach (var hit in hits)
+            {
+                var ai = hit.collider.GetComponent<AiController>();
+                if (ai == null) continue;
+
+                ai.Aggrevate();
+            }
         }
 
         private bool IsAggrevated()

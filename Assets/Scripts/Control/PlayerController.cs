@@ -16,6 +16,7 @@ namespace RPG.Control
 
         [SerializeField] private CursorMapping[] cursorMappings;
         [SerializeField] private float maxNavMeshProjectionDistance = 1f;
+        [SerializeField] private float raycastRadius = 1f;
 
         private void Awake()
         {
@@ -63,7 +64,7 @@ namespace RPG.Control
         private IEnumerable<RaycastHit> RaycastAllSorted()
         {
             var hits = new RaycastHit[5];
-            Physics.RaycastNonAlloc(GetMouseRay(), hits);
+            Physics.SphereCastNonAlloc(GetMouseRay(), raycastRadius, hits);
             var distances = new float[hits.Length];
             for (var i = 0; i < hits.Length; i++)
             {
@@ -124,20 +125,6 @@ namespace RPG.Control
             target = navMeshHit.position;
 
             return _mover.CanMoveTo(target);
-        }
-
-        private float GetPathLength(NavMeshPath path)
-        {
-            var total = 0f;
-
-            if (path.corners.Length < 2) return total;
-
-            for (var i = 0; i < path.corners.Length - 1; i++)
-            {
-                total += Vector3.Distance(path.corners[i], path.corners[i + 1]);
-            }
-            
-            return total;
         }
 
         private Ray GetMouseRay() => _camera.ScreenPointToRay(Input.mousePosition);
